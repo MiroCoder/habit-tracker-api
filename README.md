@@ -95,3 +95,9 @@ Spring Boot REST API for habit tracking, completion stats, and daily discipline 
   "dayType": "Recovery day"
 }
 ```
+
+## Development Note
+
+The HTML structure and API integration were implemented by me.
+
+The visual CSS styling was AI-assisted, then reviewed and adapted by me.

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Habit Tracker API</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+    <h1>Habit Tracker</h1>
+    <p class="subtitle">Spring Boot REST API + minimal web UI</p>
+
+    <section class="card">
+        <h2>Add habit</h2>
+
+        <input id="habitName" type="text" placeholder="Habit name">
+
+        <select id="habitPriority">
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+        </select>
+
+        <button onclick="addHabit()">Add</button>
+    </section>
+
+    <section class="card">
+        <h2>Stats</h2>
+        <div id="stats">Loading...</div>
+    </section>
+
+    <section class="card">
+        <h2>Habits</h2>
+        <div id="habits"></div>
+    </section>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
