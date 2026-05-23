@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import com.mirocoder.habittracker.model.HabitStats;
 
 import java.util.List;
 
@@ -31,5 +32,10 @@ public class HabitController {
     @PostMapping("/habits")
     public Habit addHabit(@RequestBody Habit habit) {
         return habitService.addHabit(habit);
+    }
+
+    @GetMapping("/habits/stats")
+    public HabitStats  getStats() {
+        return habitService.getStats();
     }
 }

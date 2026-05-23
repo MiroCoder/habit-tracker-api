@@ -1,6 +1,7 @@
 package com.mirocoder.habittracker.service;
 
 import com.mirocoder.habittracker.model.Habit;
+import com.mirocoder.habittracker.model.HabitStats;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -66,5 +67,15 @@ public class HabitService {
     public Habit addHabit(Habit habit) {
         habits.add(habit);
         return habit;
+    }
+
+    public HabitStats getStats() {
+    int completed = calculateCompletion(habits);
+    int total = habits.size();
+    int notCompleted = total - completed;
+    double percent = dayPercent(total, completed);
+    String dayType = dayType(total, completed);
+
+    return new HabitStats(total,completed, notCompleted, percent, dayType);
     }
 }
