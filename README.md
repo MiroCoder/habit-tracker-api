@@ -36,6 +36,11 @@ Spring Boot REST API for habit tracking, completion stats, and daily discipline 
 | GET | `/habits/search?name=Code` | Search habit by name |
 | GET | `/habits/priority/{priority}` | Filter habits by priority |
 
+
+## Web UI Preview
+
+![Habit Tracker Web UI](assets/habit-tracker-ui.png)
+
 ## Example: Create Habit
 
 ### Request
