@@ -12,10 +12,12 @@ public class HabitService {
 
     private final List<Habit> habits = new ArrayList<>();
 
+    private long nextId = 4;
+
     public HabitService() {
-        habits.add(new Habit("Code", true, Habit.Priority.High));
-        habits.add(new Habit("German", false, Habit.Priority.Medium));
-        habits.add(new Habit("Stretch", false, Habit.Priority.Low));
+        habits.add(new Habit(1L,"Code", true, Habit.Priority.High));
+        habits.add(new Habit(2L,"German", false, Habit.Priority.Medium));
+        habits.add(new Habit(3L,"Stretch", false, Habit.Priority.Low));
     }
 
     public List<Habit> getAllHabits() {
@@ -44,6 +46,24 @@ public class HabitService {
         return null;
     }
 
+    public Habit findById(Long id) {
+        for (Habit h : habits) {
+            if(h.getId() == id){
+                return h;
+            }
+        }
+        return null;
+    }
+
+    public Habit markCompleted(Long id) {
+        Habit habit = findById(id);
+
+        if (habit == null) { return null;}
+
+        habit.setCompleted(true);
+        return habit;
+    }
+
     public static String dayType(int habitsAmount, int habitsDone) {
         double percent = (habitsDone * 100.0) / habitsAmount;
 
@@ -65,6 +85,7 @@ public class HabitService {
     }
 
     public Habit addHabit(Habit habit) {
+        habit.setId(nextId++);
         habits.add(habit);
         return habit;
     }

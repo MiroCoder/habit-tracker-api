@@ -1,6 +1,7 @@
 package com.mirocoder.habittracker.model;
 
 public class Habit {
+    private long id;
     private String name;
     private boolean completed;
     private Priority priority;
@@ -9,7 +10,8 @@ public class Habit {
 
     }
 
-    public Habit(String name, boolean completed, Priority priority) {
+    public Habit(Long id,String name, boolean completed, Priority priority) {
+        this.id = id;
         this.name = name;
         this.completed = completed;
         this.priority = priority;
@@ -42,6 +44,9 @@ public class Habit {
     public Priority getPriority() {
         return priority;
     }
+
+    public long getId() { return id;}
+    public void setId(long id) {this.id = id;}
 
     public void setPriority(Priority priority) {
         this.priority = priority;

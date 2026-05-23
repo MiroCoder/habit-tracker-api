@@ -12,9 +12,9 @@ class HabitServiceTest {
     @Test
     void calculateCompletionCountsCompletedHabits() {
         ArrayList<Habit> habits = new ArrayList<>();
-        habits.add(new Habit("Code", true, Habit.Priority.High));
-        habits.add(new Habit("German", false, Habit.Priority.Medium));
-        habits.add(new Habit("Stretch", true, Habit.Priority.Low));
+        habits.add(new Habit(1L,"Code", true, Habit.Priority.High));
+        habits.add(new Habit(2L,"German", false, Habit.Priority.Medium));
+        habits.add(new Habit(3L,"Stretch", true, Habit.Priority.Low));
 
         int result = HabitService.calculateCompletion(habits);
 
@@ -24,7 +24,7 @@ class HabitServiceTest {
     @Test
     void findHabitFindsByNameIgnoringCase() {
         ArrayList<Habit> habits = new ArrayList<>();
-        habits.add(new Habit("Code", false, Habit.Priority.High));
+        habits.add(new Habit(1L,"Code", false, Habit.Priority.High));
 
         Habit result = HabitService.findHabit(habits, "code");
 
@@ -35,7 +35,7 @@ class HabitServiceTest {
     @Test
     void findHabitReturnsNullWhenNotFound() {
         ArrayList<Habit> habits = new ArrayList<>();
-        habits.add(new Habit("Code", false, Habit.Priority.High));
+        habits.add(new Habit(1L,"Code", false, Habit.Priority.High));
 
         Habit result = HabitService.findHabit(habits, "Sleep");
 

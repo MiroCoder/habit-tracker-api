@@ -2,10 +2,7 @@ package com.mirocoder.habittracker;
 
 import com.mirocoder.habittracker.model.Habit;
 import com.mirocoder.habittracker.service.HabitService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import com.mirocoder.habittracker.model.HabitStats;
 
 import java.util.List;
@@ -37,5 +34,15 @@ public class HabitController {
     @GetMapping("/habits/stats")
     public HabitStats  getStats() {
         return habitService.getStats();
+    }
+
+    @GetMapping("/habits/{id}")
+    public Habit getHabitById(@PathVariable Long id) {
+        return habitService.findById(id);
+    }
+
+    @PatchMapping("/habits/{id}/complete")
+    public Habit markCompleted(@PathVariable Long id) {
+        return habitService.markCompleted(id);
     }
 }
