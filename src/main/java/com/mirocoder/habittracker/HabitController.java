@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import com.mirocoder.habittracker.model.HabitStats;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import com.mirocoder.habittracker.dto.HabitRequest;
+
 import java.util.List;
 import jakarta.validation.Valid;
 
@@ -29,8 +31,8 @@ public class HabitController {
     }
 
     @PostMapping("/habits")
-    public ResponseEntity<Habit> addHabit(@Valid @RequestBody Habit habit) {
-        Habit createdHabit = habitService.addHabit(habit);
+    public ResponseEntity<Habit> addHabit(@Valid @RequestBody HabitRequest request) {
+        Habit createdHabit = habitService.addHabit(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdHabit);
     }
 

@@ -5,7 +5,7 @@ async function loadHabits() {
     const container = document.getElementById("habits");
     container.innerHTML = "";
 
-    habits.forEach(habit => {
+    habits.forEach((habit, index) => {
         const div = document.createElement("div");
         div.className = "habit";
 
@@ -14,7 +14,7 @@ async function loadHabits() {
                 <strong class="${habit.completed ? "done" : ""}">
                     ${habit.name}
                 </strong>
-                <div>ID: ${habit.id} | ${habit.priority} | completed: ${habit.completed}</div>
+                <div>#${index + 1} | ${habit.priority} | completed: ${habit.completed}</div>
             </div>
 
             <div class="actions">

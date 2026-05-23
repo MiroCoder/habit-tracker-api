@@ -3,6 +3,7 @@ package com.mirocoder.habittracker.service;
 import com.mirocoder.habittracker.model.Habit;
 import com.mirocoder.habittracker.model.HabitStats;
 import org.springframework.stereotype.Service;
+import com.mirocoder.habittracker.dto.HabitRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,8 +85,14 @@ public class HabitService {
         return (completedHabits * 100.0) / totalHabits;
     }
 
-    public Habit addHabit(Habit habit) {
-        habit.setId(nextId++);
+    public Habit addHabit(HabitRequest request) {
+        Habit habit = new Habit(
+                nextId++,
+                request.getName(),
+                request.isCompleted(),
+                request.getPriority()
+        );
+
         habits.add(habit);
         return habit;
     }
