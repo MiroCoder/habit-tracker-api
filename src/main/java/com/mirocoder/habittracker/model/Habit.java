@@ -16,7 +16,7 @@ public class Habit {
 
     }
 
-    public Habit(Long id,String name, boolean completed, Priority priority) {
+    public Habit(long id,String name, boolean completed, Priority priority) {
         this.id = id;
         this.name = name;
         this.completed = completed;
