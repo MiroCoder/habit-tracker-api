@@ -33,6 +33,8 @@ Spring Boot REST API for habit tracking, completion stats, and daily discipline 
 | PATCH | `/habits/{id}/complete` | Mark habit completed |
 | DELETE | `/habits/{id}` | Delete habit |
 | GET | `/habits/stats` | Get habit statistics |
+| GET | `/habits/search?name=Code` | Search habit by name |
+| GET | `/habits/priority/{priority}` | Filter habits by priority |
 
 ## Example: Create Habit
 

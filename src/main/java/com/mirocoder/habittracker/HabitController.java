@@ -86,5 +86,20 @@ public class HabitController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/habits/search")
+    public ResponseEntity<Habit> seaarchHabit(@RequestParam String name) {
+        Habit habit = habitService.findByName(name);
+
+        if (habit == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(habit);
+    }
+
+    @GetMapping("/habits/priority/{priority}")
+    public List<Habit> getHabitsByPriority(@PathVariable Habit.Priority priority) {
+        return habitService.getHabitsByPriority(priority);
+    }
 
 }

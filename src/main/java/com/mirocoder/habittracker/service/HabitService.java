@@ -46,7 +46,7 @@ public class HabitService {
         return null;
     }
 
-    public Habit findById(Long id) {
+    public Habit findById(long id) {
         for (Habit h : habits) {
             if(h.getId() == id){
                 return h;
@@ -55,7 +55,7 @@ public class HabitService {
         return null;
     }
 
-    public Habit markCompleted(Long id) {
+    public Habit markCompleted(long id) {
         Habit habit = findById(id);
 
         if (habit == null) { return null;}
@@ -100,7 +100,7 @@ public class HabitService {
     return new HabitStats(total,completed, notCompleted, percent, dayType);
     }
 
-    public Habit updateHabit(Long id, Habit updatedHabit) {
+    public Habit updateHabit(long id, Habit updatedHabit) {
         Habit habit = findById(id);
 
         if(habit == null) {
@@ -114,7 +114,7 @@ public class HabitService {
         return habit;
     }
 
-    public boolean deleteHabit(Long id) {
+    public boolean deleteHabit(long id) {
         Habit habit = findById(id);
 
         if(habit == null) {
@@ -123,5 +123,24 @@ public class HabitService {
 
         habits.remove(habit);
         return true;
+    }
+
+    public Habit findByName(String name) {
+        for (Habit h: habits) {
+            if (h.getName().equals(name)){
+                return h;
+            }
+        }
+        return null;
+    }
+
+    public List<Habit> getHabitsByPriority(Habit.Priority priority) {
+        List<Habit> result = new ArrayList<>();
+        for (Habit h: habits) {
+            if (h.getPriority().equals(priority)){
+                result.add(h);
+            }
+        }
+        return result;
     }
 }
