@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import com.mirocoder.habittracker.model.HabitStats;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
@@ -55,6 +55,20 @@ public class HabitController {
     @PatchMapping("/habits/{id}/complete")
     public ResponseEntity<Habit> markCompleted(@PathVariable long id) {
         Habit habit = habitService.markCompleted(id);
+
+        if (habit == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(habit);
+    }
+
+    @PutMapping("/habits/{id}")
+    public ResponseEntity<Habit> updateHabit(
+            @PathVariable long id,
+            @RequestBody Habit updatedHabit
+    ) {
+        Habit habit = habitService.updateHabit(id, updatedHabit);
 
         if (habit == null) {
             return ResponseEntity.notFound().build();

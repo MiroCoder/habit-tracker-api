@@ -100,6 +100,20 @@ public class HabitService {
     return new HabitStats(total,completed, notCompleted, percent, dayType);
     }
 
+    public Habit updateHabit(Long id, Habit updatedHabit) {
+        Habit habit = findById(id);
+
+        if(habit == null) {
+            return null;
+        }
+
+        habit.setName(updatedHabit.getName());
+        habit.setCompleted(updatedHabit.isCompleted());
+        habit.setPriority(updatedHabit.getPriority());
+
+        return habit;
+    }
+
     public boolean deleteHabit(Long id) {
         Habit habit = findById(id);
 
