@@ -99,4 +99,15 @@ public class HabitService {
 
     return new HabitStats(total,completed, notCompleted, percent, dayType);
     }
+
+    public boolean deleteHabit(Long id) {
+        Habit habit = findById(id);
+
+        if(habit == null) {
+            return false;
+        }
+
+        habits.remove(habit);
+        return true;
+    }
 }

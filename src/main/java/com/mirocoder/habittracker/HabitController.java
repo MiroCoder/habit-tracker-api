@@ -4,6 +4,8 @@ import com.mirocoder.habittracker.model.Habit;
 import com.mirocoder.habittracker.service.HabitService;
 import org.springframework.web.bind.annotation.*;
 import com.mirocoder.habittracker.model.HabitStats;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -27,8 +29,11 @@ public class HabitController {
     }
 
     @PostMapping("/habits")
-    public Habit addHabit(@RequestBody Habit habit) {
-        return habitService.addHabit(habit);
+    public ResponseEntity<Habit> addHabit(@RequestBody Habit habit) {
+        Habit createdHabit = habitService.addHabit(habit);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdHabit);
+
     }
 
     @GetMapping("/habits/stats")
@@ -37,12 +42,37 @@ public class HabitController {
     }
 
     @GetMapping("/habits/{id}")
-    public Habit getHabitById(@PathVariable Long id) {
-        return habitService.findById(id);
+    public ResponseEntity<Habit> getHabitById(@PathVariable long id) {
+        Habit habit = habitService.findById(id);
+
+        if (habit == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(habit);
     }
 
     @PatchMapping("/habits/{id}/complete")
-    public Habit markCompleted(@PathVariable Long id) {
-        return habitService.markCompleted(id);
+    public ResponseEntity<Habit> markCompleted(@PathVariable long id) {
+        Habit habit = habitService.markCompleted(id);
+
+        if (habit == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(habit);
     }
+
+    @DeleteMapping("/habits/{id}")
+    public ResponseEntity<Void> deleteHabit(@PathVariable long id) {
+        boolean deleted = habitService.deleteHabit(id);
+
+        if (!deleted) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
+
 }
