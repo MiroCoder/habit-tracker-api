@@ -1,9 +1,15 @@
 package com.mirocoder.habittracker.model;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class Habit {
     private long id;
+
+    @NotBlank(message = "Habit name cannot be empty")
     private String name;
     private boolean completed;
+
+    @NotNull(message = "Priority is required")
     private Priority priority;
 
     public Habit() {
@@ -51,4 +57,6 @@ public class Habit {
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
+
+
 }

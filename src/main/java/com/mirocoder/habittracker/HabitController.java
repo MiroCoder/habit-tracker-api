@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import jakarta.validation.Valid;
 
 @RestController
 public class HabitController {
@@ -29,11 +30,9 @@ public class HabitController {
     }
 
     @PostMapping("/habits")
-    public ResponseEntity<Habit> addHabit(@RequestBody Habit habit) {
+    public ResponseEntity<Habit> addHabit(@Valid @RequestBody Habit habit) {
         Habit createdHabit = habitService.addHabit(habit);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(createdHabit);
-
     }
 
     @GetMapping("/habits/stats")
@@ -66,7 +65,7 @@ public class HabitController {
     @PutMapping("/habits/{id}")
     public ResponseEntity<Habit> updateHabit(
             @PathVariable long id,
-            @RequestBody Habit updatedHabit
+            @Valid @RequestBody Habit updatedHabit
     ) {
         Habit habit = habitService.updateHabit(id, updatedHabit);
 
