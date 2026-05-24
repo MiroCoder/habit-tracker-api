@@ -4,7 +4,8 @@ import com.mirocoder.habittracker.model.Habit;
 import com.mirocoder.habittracker.model.HabitStats;
 import org.springframework.stereotype.Service;
 import com.mirocoder.habittracker.dto.HabitRequest;
-
+import com.mirocoder.habittracker.repository.HabitRepository;
+import com.mirocoder.habittracker.dto.HabitRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,17 +13,22 @@ import java.util.List;
 public class HabitService {
 
     private final List<Habit> habits = new ArrayList<>();
-
+    private final HabitRepository habitRepository;
     private long nextId = 4;
 
-    public HabitService() {
+    public HabitService(HabitRepository habitRepository) {
+        this.habitRepository = habitRepository;
+
         habits.add(new Habit(1L,"Code", true, Habit.Priority.High));
         habits.add(new Habit(2L,"German", false, Habit.Priority.Medium));
         habits.add(new Habit(3L,"Stretch", false, Habit.Priority.Low));
     }
 
+//    public List<Habit> getAllHabits() {
+//        return habits;
+//    }
     public List<Habit> getAllHabits() {
-        return habits;
+        return habitRepository.findAll();
     }
 
     public static int calculateCompletion(List<Habit> habits) {
@@ -85,26 +91,48 @@ public class HabitService {
         return (completedHabits * 100.0) / totalHabits;
     }
 
+//    public Habit addHabit(HabitRequest request) {
+//        Habit habit = new Habit(
+//                nextId++,
+//                request.getName(),
+//                request.isCompleted(),
+//                request.getPriority()
+//        );
+//
+//        habits.add(habit);
+//        return habit;
+//    }
+
     public Habit addHabit(HabitRequest request) {
         Habit habit = new Habit(
-                nextId++,
+                0,
                 request.getName(),
                 request.isCompleted(),
                 request.getPriority()
         );
 
-        habits.add(habit);
-        return habit;
+        return habitRepository.save(habit);
     }
 
+//    public HabitStats getStats() {
+//        int completed = calculateCompletion(habits);
+//        int total = habits.size();
+//        int notCompleted = total - completed;
+//        double percent = dayPercent(total, completed);
+//        String dayType = dayType(total, completed);
+//
+//        return new HabitStats(total,completed, notCompleted, percent, dayType);
+//    }
     public HabitStats getStats() {
-    int completed = calculateCompletion(habits);
-    int total = habits.size();
-    int notCompleted = total - completed;
-    double percent = dayPercent(total, completed);
-    String dayType = dayType(total, completed);
+        List<Habit> habits = habitRepository.findAll();
 
-    return new HabitStats(total,completed, notCompleted, percent, dayType);
+        int completed = calculateCompletion(habits);
+        int total = habits.size();
+        int notCompleted = total - completed;
+        double percent = total == 0 ? 0 : dayPercent(total, completed);
+        String dayType = total == 0 ? "Zero day" : dayType(total, completed);
+
+        return new HabitStats(total, completed, notCompleted, percent, dayType);
     }
 
     public Habit updateHabit(long id, Habit updatedHabit) {

@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS habits (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    completed BOOLEAN NOT NULL,
+    priority VARCHAR(20) NOT NULL
+    );
