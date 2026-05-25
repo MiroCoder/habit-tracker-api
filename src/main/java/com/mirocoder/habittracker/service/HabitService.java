@@ -82,8 +82,10 @@ public class HabitService {
     public HabitStats getStats() {
         List<Habit> habits = habitRepository.findAll();
 
-        int completed = calculateCompletion(habits);
-        int total = habits.size();
+//        int completed = calculateCompletion(habits);
+        int completed = habitRepository.countCompleted();
+//        int total = habits.size();
+        int total = habitRepository.countALL();
         int notCompleted = total - completed;
         double percent = total == 0 ? 0 : dayPercent(total, completed);
         String dayType = total == 0 ? "Zero day" : dayType(total, completed);

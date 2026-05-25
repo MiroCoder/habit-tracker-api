@@ -4,3 +4,4 @@ CREATE TABLE IF NOT EXISTS habits (
     completed BOOLEAN NOT NULL,
     priority VARCHAR(20) NOT NULL
     );
+

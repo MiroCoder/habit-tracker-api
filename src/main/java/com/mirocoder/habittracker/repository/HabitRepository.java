@@ -86,4 +86,14 @@ public class HabitRepository {
                 Habit.Priority.valueOf(rs.getString("priority"))
         );
     }
+
+    public int countALL() {
+        String sql = "SELECT COUNT(*) FROM habits";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    public int countCompleted() {
+        String sql = "SELECT COUNT(*) FROM habits WHERE completed = true";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
 }
