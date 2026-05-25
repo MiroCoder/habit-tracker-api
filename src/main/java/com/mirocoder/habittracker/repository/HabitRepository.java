@@ -7,6 +7,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -19,16 +21,25 @@ public class HabitRepository {
     }
 
     public List<Habit> findAll() {
-        String sql = "SELECT * FROM habits";
+        String sql = "SELECT * FROM habits ORDER BY id";
+        return jdbcTemplate.query(sql, this::mapRow);
+    }
 
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
-                new Habit(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getBoolean("completed"),
-                        Habit.Priority.valueOf(rs.getString("priority"))
-                )
-        );
+    public Habit findById(long id) {
+        String sql = "SELECT * FROM habits WHERE id = ?";
+        List<Habit> habits = jdbcTemplate.query(sql, this::mapRow, id);
+        return habits.isEmpty() ? null : habits.get(0);
+    }
+
+    public Habit findByName(String name) {
+        String sql = "SELECT * FROM habits WHERE LOWER(name) = LOWER(?)";
+        List<Habit> habits = jdbcTemplate.query(sql, this::mapRow, name);
+        return habits.isEmpty() ? null : habits.get(0);
+    }
+
+    public List<Habit> findByPriority(Habit.Priority priority) {
+        String sql = "SELECT * FROM habits WHERE priority = ? ORDER BY id";
+        return jdbcTemplate.query(sql, this::mapRow, priority.name());
     }
 
     public Habit save(Habit habit) {
@@ -45,7 +56,34 @@ public class HabitRepository {
         }, keyHolder);
 
         habit.setId(keyHolder.getKey().longValue());
-
         return habit;
+    }
+
+    public Habit update(Habit habit) {
+        String sql = "UPDATE habits SET name = ?, completed = ?, priority = ? WHERE id = ?";
+
+        int updatedRows = jdbcTemplate.update(
+                sql,
+                habit.getName(),
+                habit.isCompleted(),
+                habit.getPriority().name(),
+                habit.getId()
+        );
+
+        return updatedRows == 0 ? null : findById(habit.getId());
+    }
+
+    public boolean deleteById(long id) {
+        String sql = "DELETE FROM habits WHERE id = ?";
+        return jdbcTemplate.update(sql, id) > 0;
+    }
+
+    private Habit mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new Habit(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getBoolean("completed"),
+                Habit.Priority.valueOf(rs.getString("priority"))
+        );
     }
 }
