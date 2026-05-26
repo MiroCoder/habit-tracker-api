@@ -96,4 +96,9 @@ public class HabitRepository {
         String sql = "SELECT COUNT(*) FROM habits WHERE completed = true";
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
+
+    public boolean markCompleted(long id) {
+        String sql = "UPDATE habits  SET completed = true WHERE id = ?";
+        return jdbcTemplate.update(sql, id) > 0;
+    }
 }
