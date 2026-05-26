@@ -101,4 +101,9 @@ public class HabitRepository {
         String sql = "UPDATE habits  SET completed = true WHERE id = ?";
         return jdbcTemplate.update(sql, id) > 0;
     }
+
+    public int resetCompleted() {
+        String sql = "UPDATE habits SET completed = false";
+        return jdbcTemplate.update(sql);
+    }
 }

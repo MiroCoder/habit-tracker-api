@@ -5,3 +5,13 @@ CREATE TABLE IF NOT EXISTS habits (
     priority VARCHAR(20) NOT NULL
     );
 
+CREATE TABLE IF NOT EXISTS app_settings (
+    id INT PRIMARY KEY,
+    last_reset_at TIMESTAMP NOT NULL
+);
+
+INSERT INTO app_settings (id, last_reset_at)
+SELECT 1, TIMESTAMP '2010-01-01 00:00:00'
+    WHERE NOT EXISTS (
+    SELECT 1 FROM app_settings WHERE id = 1
+);

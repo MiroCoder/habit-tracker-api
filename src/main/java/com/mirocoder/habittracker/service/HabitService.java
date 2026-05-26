@@ -7,15 +7,21 @@ import com.mirocoder.habittracker.repository.HabitRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+import com.mirocoder.habittracker.repository.AppSettingsRepository;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 @Service
 public class HabitService {
 
     private final HabitRepository habitRepository;
+    private final AppSettingsRepository appSettingsRepository;
 
-    public HabitService(HabitRepository habitRepository) {
+    public HabitService(HabitRepository habitRepository,
+                        AppSettingsRepository appSettingsRepository) {
         this.habitRepository = habitRepository;
+        this.appSettingsRepository = appSettingsRepository;
     }
+
 
     public List<Habit> getAllHabits() {
         return habitRepository.findAll();
@@ -117,5 +123,17 @@ public class HabitService {
 
     public List<Habit> getHabitsByPriority(Habit.Priority priority) {
         return habitRepository.findByPriority(priority);
+    }
+
+    public int resetDailyProgressIfNeeded() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
+        LocalDateTime todayNoon = now.toLocalDate().atTime(12, 0);
+        LocalDateTime lastResetAt = appSettingsRepository.getLastResetAt();
+
+        if ((now.isAfter(todayNoon)  || now.isEqual(todayNoon)) && lastResetAt.isBefore(todayNoon)) {
+            int resetCount = habitRepository.resetCompleted();
+            appSettingsRepository.updateLastResetAt(now);
+            return resetCount;
+        } return 0;
     }
 }
