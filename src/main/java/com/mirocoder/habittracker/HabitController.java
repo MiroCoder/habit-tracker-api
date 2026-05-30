@@ -104,4 +104,9 @@ public class HabitController {
         return habitService.getHabitsByPriority(priority);
     }
 
+    @GetMapping("/habits/not-completed")
+    public List<Habit> getNotCompletedHabits() {
+        return habitService.getNotCompletedHabits();
+    }
+
 }

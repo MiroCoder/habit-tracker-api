@@ -3,8 +3,10 @@ package com.mirocoder.habittracker.service;
 import com.mirocoder.habittracker.dto.HabitRequest;
 import com.mirocoder.habittracker.model.Habit;
 import com.mirocoder.habittracker.model.HabitStats;
+import com.mirocoder.habittracker.repository.DailyStatsRepository;
 import com.mirocoder.habittracker.repository.HabitRepository;
 import org.springframework.stereotype.Service;
+import com.mirocoder.habittracker.model.DailyStats;
 
 import java.util.List;
 import com.mirocoder.habittracker.repository.AppSettingsRepository;
@@ -15,11 +17,13 @@ public class HabitService {
 
     private final HabitRepository habitRepository;
     private final AppSettingsRepository appSettingsRepository;
+    private final DailyStatsRepository dailyStatsRepository;
 
     public HabitService(HabitRepository habitRepository,
-                        AppSettingsRepository appSettingsRepository) {
+                        AppSettingsRepository appSettingsRepository, DailyStatsRepository dailyStatsRepository) {
         this.habitRepository = habitRepository;
         this.appSettingsRepository = appSettingsRepository;
+        this.dailyStatsRepository = dailyStatsRepository;
     }
 
 
@@ -91,7 +95,7 @@ public class HabitService {
 //        int completed = calculateCompletion(habits);
         int completed = habitRepository.countCompleted();
 //        int total = habits.size();
-        int total = habitRepository.countALL();
+        int total = habitRepository.countAll();
         int notCompleted = total - completed;
         double percent = total == 0 ? 0 : dayPercent(total, completed);
         String dayType = total == 0 ? "Zero day" : dayType(total, completed);
@@ -131,9 +135,29 @@ public class HabitService {
         LocalDateTime lastResetAt = appSettingsRepository.getLastResetAt();
 
         if ((now.isAfter(todayNoon)  || now.isEqual(todayNoon)) && lastResetAt.isBefore(todayNoon)) {
+            int completed = habitRepository.countCompleted();
+            int total = habitRepository.countAll();
+            int notCompleted = total - completed;
+            double percent = total == 0 ? 0 : dayPercent(total, completed);
+            String dayType = total == 0 ? "Zero day" : dayType(total, completed);
+            DailyStats stats = new DailyStats(
+                    0,
+                    now.toLocalDate(),
+                    total,
+                    completed,
+                    notCompleted,
+                    percent,
+                    dayType
+            );
+            dailyStatsRepository.save(stats);
+
             int resetCount = habitRepository.resetCompleted();
             appSettingsRepository.updateLastResetAt(now);
             return resetCount;
         } return 0;
+    }
+
+    public List<Habit> getNotCompletedHabits(){
+        return habitRepository.findNotCompleted();
     }
 }

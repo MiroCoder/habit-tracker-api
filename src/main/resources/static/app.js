@@ -77,9 +77,39 @@ async function deleteHabit(id) {
     await refresh();
 }
 
+
+async function loadNotCompletedHabits() {
+    const response = await fetch("/habits/not-completed");
+    const habits = await response.json();
+
+    const container = document.getElementById("notCompletedHabits");
+    container.innerHTML = "";
+
+    habits.forEach((habit, index) => {
+        const div = document.createElement("div");
+        div.className = "habit";
+
+        div.innerHTML = `
+            <div>
+                <strong>${habit.name}</strong>
+                <div>#${index + 1} | ${habit.priority} | completed: ${habit.completed}</div>
+            </div>
+
+            <div class="actions">
+                <button onclick="completeHabit(${habit.id})">Done</button>
+            </div>
+        `;
+
+
+        container.appendChild(div);
+       });
+}
+
+
 async function refresh() {
     await loadHabits();
     await loadStats();
+    await loadNotCompletedHabits();
 }
 
 refresh();

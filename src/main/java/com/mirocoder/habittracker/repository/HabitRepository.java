@@ -87,7 +87,7 @@ public class HabitRepository {
         );
     }
 
-    public int countALL() {
+    public int countAll() {
         String sql = "SELECT COUNT(*) FROM habits";
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
@@ -105,5 +105,15 @@ public class HabitRepository {
     public int resetCompleted() {
         String sql = "UPDATE habits SET completed = false";
         return jdbcTemplate.update(sql);
+    }
+
+    public List<Habit> findNotCompleted(){
+        String sql = "SELECT * FROM habits WHERE completed = false";
+        return jdbcTemplate.query(sql, (rs,rowNum) -> new Habit(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getBoolean("completed"),
+                Habit.Priority.valueOf(rs.getString("priority"))
+        ));
     }
 }

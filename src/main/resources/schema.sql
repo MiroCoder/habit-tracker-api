@@ -15,3 +15,13 @@ SELECT 1, TIMESTAMP '2010-01-01 00:00:00'
     WHERE NOT EXISTS (
     SELECT 1 FROM app_settings WHERE id = 1
 );
+
+CREATE TABLE IF NOT EXISTS daily_stats (
+    id BIGINT PRIMARY KEY,
+    stat_date DATE NOT NULL UNIQUE,
+    total  INT NOT NULL,
+    completed INT NOT NULL,
+    not_completed INT NOT NULL,
+    percent DOUBLE PRECISION NOT NULL,
+    day_type VARCHAR(50) NOT NULL
+);
