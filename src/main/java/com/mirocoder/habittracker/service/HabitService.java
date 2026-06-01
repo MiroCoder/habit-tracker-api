@@ -8,6 +8,7 @@ import com.mirocoder.habittracker.repository.HabitRepository;
 import org.springframework.stereotype.Service;
 import com.mirocoder.habittracker.model.DailyStats;
 
+import java.time.LocalDate;
 import java.util.List;
 import com.mirocoder.habittracker.repository.AppSettingsRepository;
 import java.time.LocalDateTime;
@@ -159,5 +160,29 @@ public class HabitService {
 
     public List<Habit> getNotCompletedHabits(){
         return habitRepository.findNotCompleted();
+    }
+
+    public List<DailyStats> getDailyStatsHistory() {
+        return dailyStatsRepository.findAll();
+    }
+
+    public DailyStats updateDailyStats(LocalDate date, int total, int completed) {
+        int notCompleted = total - completed;
+        double percent = total == 0 ? 0 : dayPercent(total, completed);
+        String dayType = total == 0 ? "Zero day" : dayType(total, completed);
+
+        DailyStats stats = new DailyStats(
+                0,
+                date,
+                total,
+                completed,
+                notCompleted,
+                percent,
+                dayType
+        );
+
+        dailyStatsRepository.update(stats);
+
+        return stats;
     }
 }

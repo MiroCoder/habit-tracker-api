@@ -1,5 +1,7 @@
 package com.mirocoder.habittracker;
 
+import com.mirocoder.habittracker.dto.DailyStatsUpdateRequest;
+import com.mirocoder.habittracker.model.DailyStats;
 import com.mirocoder.habittracker.model.Habit;
 import com.mirocoder.habittracker.service.HabitService;
 import org.springframework.web.bind.annotation.*;
@@ -7,6 +9,13 @@ import com.mirocoder.habittracker.model.HabitStats;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.mirocoder.habittracker.dto.HabitRequest;
+
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import java.time.LocalDate;
+
+
 
 import java.util.List;
 import jakarta.validation.Valid;
@@ -107,6 +116,23 @@ public class HabitController {
     @GetMapping("/habits/not-completed")
     public List<Habit> getNotCompletedHabits() {
         return habitService.getNotCompletedHabits();
+    }
+
+    @GetMapping("/stats/history")
+    public List<DailyStats> getDailyStatsHistory() {
+        return habitService.getDailyStatsHistory();
+    }
+
+    @PatchMapping("/stats/history/{date}")
+    public DailyStats updateDailyStats(
+            @PathVariable LocalDate date,
+            @RequestBody DailyStatsUpdateRequest request
+    ) {
+        return habitService.updateDailyStats(
+                date,
+                request.getTotal(),
+                request.getCompleted()
+        );
     }
 
 }

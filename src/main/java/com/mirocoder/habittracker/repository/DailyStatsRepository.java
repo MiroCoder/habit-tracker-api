@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -44,5 +45,26 @@ public class DailyStatsRepository {
                 rs.getDouble("percent"),
                 rs.getString("day_type")
         ));
+    }
+
+    public int update(DailyStats stats) {
+        String sql = """
+            UPDATE daily_stats
+            SET total = ?,
+                completed = ?,
+                not_completed = ?,
+                percent = ?,
+                day_type = ?
+            WHERE stat_date = ?
+            """;
+
+        return jdbcTemplate.update(sql,
+                stats.getTotal(),
+                stats.getCompleted(),
+                stats.getNotCompleted(),
+                stats.getPercent(),
+                stats.getDayType(),
+                stats.getStatDate()
+        );
     }
 }

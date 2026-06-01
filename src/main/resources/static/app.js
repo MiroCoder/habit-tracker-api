@@ -105,11 +105,40 @@ async function loadNotCompletedHabits() {
        });
 }
 
+async function loadHistoryStats() {
+    const response = await fetch("/stats/history");
+        const history = await response.json();
+
+        const container = document.getElementById("historyStats");
+        container.innerHTML = "";
+
+        history.forEach(day => {
+            const div = document.createElement("div");
+            div.className = "habit";
+
+            div.innerHTML = `
+                <div>
+                    <strong>${day.statDate}</strong>
+                    <div>
+                        Total: ${day.total} |
+                        Completed: ${day.completed} |
+                        Not completed: ${day.notCompleted} |
+                        ${day.percent.toFixed(1)}% |
+                        ${day.dayType}
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(div);
+        });
+}
+
 
 async function refresh() {
     await loadHabits();
     await loadStats();
     await loadNotCompletedHabits();
+    await loadHistoryStats();
 }
 
 refresh();

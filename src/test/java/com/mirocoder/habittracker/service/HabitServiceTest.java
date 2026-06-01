@@ -53,7 +53,7 @@ class HabitServiceTest {
     void dayPercentReturnsCorrectPercent() {
         double result = HabitService.dayPercent(4, 2);
 
-        assertEquals(50.0, result);
+        assertEquals(50.0, result, 0.001);
     }
     @Test
     void dayTypeReturnsStrongDayForSeventyPercent() {
