@@ -18,6 +18,20 @@ public class DailyStatsRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public List<DailyStats> findLastDays(int days) {
+        String sql = "SELECT * FROM daily_stats ORDER BY stat_date DESC LIMIT ?";
+
+        return jdbcTemplate.query(sql,(rs,rowNum) -> new DailyStats(
+                rs.getLong("id"),
+                rs.getDate("stat_date").toLocalDate(),
+                rs.getInt("total"),
+                rs.getInt("completed"),
+                rs.getInt("not_completed"),
+                rs.getDouble("percent"),
+                rs.getString("day_type")
+        ), days);
+    }
+
     public DailyStats save(DailyStats stats){
         String sql = "INSERT INTO daily_stats " +
                 "(stat_date, total, completed, not_completed, percent, day_type)" +

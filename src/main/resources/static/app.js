@@ -133,12 +133,28 @@ async function loadHistoryStats() {
         });
 }
 
+async function loadWeeklySummary() {
+    const response = await fetch("/stats/summary?days=7");
+    const summary = await response.json();
+
+    document.getElementById("weeklySummary").innerHTML = `
+        Days recorded: ${summary.days}<br>
+        Average: ${summary.averagePercent.toFixed(1)}%<br>
+        Perfect days: ${summary.perfectDays}<br>
+        Strong days: ${summary.strongDays}<br>
+        System days: ${summary.systemDays}<br>
+        Recovery days: ${summary.recoveryDays}<br>
+        Zero days: ${summary.zeroDays}
+    `;
+}
+
 
 async function refresh() {
     await loadHabits();
     await loadStats();
     await loadNotCompletedHabits();
     await loadHistoryStats();
+    await loadWeeklySummary();
 }
 
 refresh();

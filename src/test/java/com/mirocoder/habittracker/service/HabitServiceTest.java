@@ -1,5 +1,13 @@
 package com.mirocoder.habittracker.service;
 import com.mirocoder.habittracker.model.Habit;
+import com.mirocoder.habittracker.model.DailyStats;
+import com.mirocoder.habittracker.repository.AppSettingsRepository;
+import com.mirocoder.habittracker.repository.DailyStatsRepository;
+import com.mirocoder.habittracker.repository.HabitRepository;
+
+import java.time.LocalDate;
+
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +27,28 @@ class HabitServiceTest {
         int result = HabitService.calculateCompletion(habits);
 
         assertEquals(2, result);
+    }
+
+    @Test
+    void updateDailyStatsCalculatesPerfectDay() {
+        HabitRepository habitRepository = mock(HabitRepository.class);
+        AppSettingsRepository appSettingsRepository = mock(AppSettingsRepository.class);
+        DailyStatsRepository dailyStatsRepository = mock(DailyStatsRepository.class);
+
+        HabitService service = new HabitService(habitRepository, appSettingsRepository, dailyStatsRepository);
+
+        LocalDate date = LocalDate.of(2026, 6, 1);
+
+        DailyStats result = service.updateDailyStats(date, 3, 3);
+
+        assertEquals(date, result.getStatDate());
+        assertEquals(3, result.getTotal());
+        assertEquals(3, result.getCompleted());
+        assertEquals(0, result.getNotCompleted());
+        assertEquals(100.0, result.getPercent(), 0.001);
+        assertEquals("Perfect day", result.getDayType());
+
+        verify(dailyStatsRepository).update(result);
     }
 
 //    @Test

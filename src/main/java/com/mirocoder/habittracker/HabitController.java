@@ -1,6 +1,7 @@
 package com.mirocoder.habittracker;
 
 import com.mirocoder.habittracker.dto.DailyStatsUpdateRequest;
+import com.mirocoder.habittracker.dto.StatsSummaryResponse;
 import com.mirocoder.habittracker.model.DailyStats;
 import com.mirocoder.habittracker.model.Habit;
 import com.mirocoder.habittracker.service.HabitService;
@@ -133,6 +134,13 @@ public class HabitController {
                 request.getTotal(),
                 request.getCompleted()
         );
+    }
+
+    @GetMapping("/stats/summary")
+    public StatsSummaryResponse getStatsSummary(
+        @RequestParam(defaultValue = "7") int days
+    ) {
+        return habitService.getStatsSummary(days);
     }
 
 }

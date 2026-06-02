@@ -1,6 +1,7 @@
 package com.mirocoder.habittracker.service;
 
 import com.mirocoder.habittracker.dto.HabitRequest;
+import com.mirocoder.habittracker.dto.StatsSummaryResponse;
 import com.mirocoder.habittracker.model.Habit;
 import com.mirocoder.habittracker.model.HabitStats;
 import com.mirocoder.habittracker.repository.DailyStatsRepository;
@@ -13,6 +14,7 @@ import java.util.List;
 import com.mirocoder.habittracker.repository.AppSettingsRepository;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+
 @Service
 public class HabitService {
 
@@ -167,6 +169,9 @@ public class HabitService {
     }
 
     public DailyStats updateDailyStats(LocalDate date, int total, int completed) {
+        if (total < 0 || completed < 0 || completed > total){
+            throw new IllegalArgumentException("Invalid values for total and completed");
+        }
         int notCompleted = total - completed;
         double percent = total == 0 ? 0 : dayPercent(total, completed);
         String dayType = total == 0 ? "Zero day" : dayType(total, completed);
@@ -184,5 +189,47 @@ public class HabitService {
         dailyStatsRepository.update(stats);
 
         return stats;
+    }
+
+    public StatsSummaryResponse getStatsSummary(int days) {
+        List<DailyStats> history =dailyStatsRepository.findLastDays(days);
+
+        if (history.isEmpty()) {
+            return new StatsSummaryResponse(0, 0, 0, 0, 0, 0, 0);
+        }
+
+        double totalPercent = 0;
+        int perfectDays = 0;
+        int strongDays = 0;
+        int systemDays = 0;
+        int recoveryDays = 0;
+        int zeroDays = 0;
+
+        for (DailyStats stats : history) {
+            totalPercent += stats.getPercent();
+            if (stats.getDayType().equals("Perfect day")) {
+                perfectDays++;
+            } else if (stats.getDayType().equals("Strong day")) {
+                strongDays++;
+            } else if (stats.getDayType().equals("System day")) {
+                systemDays++;
+            } else if (stats.getDayType().equals("Recovery day")) {
+                recoveryDays++;
+            } else if (stats.getDayType().equals("Zero day")) {
+                zeroDays++;
+            }
+        }
+
+        double averagePercent = totalPercent / history.size();
+
+        return new StatsSummaryResponse(
+                history.size(),
+                averagePercent,
+                perfectDays,
+                strongDays,
+                systemDays,
+                recoveryDays,
+                zeroDays
+        );
     }
 }
