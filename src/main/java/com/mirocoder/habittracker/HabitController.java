@@ -143,4 +143,9 @@ public class HabitController {
         return habitService.getStatsSummary(days);
     }
 
+    @GetMapping("/habits/next")
+    public Habit getNextHabit() {
+        return habitService.getNextHabit();
+    }
+
 }

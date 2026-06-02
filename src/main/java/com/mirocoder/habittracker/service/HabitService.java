@@ -232,4 +232,8 @@ public class HabitService {
                 zeroDays
         );
     }
+
+    public Habit getNextHabit() {
+        return habitRepository.findNextNotCompleted();
+    }
 }

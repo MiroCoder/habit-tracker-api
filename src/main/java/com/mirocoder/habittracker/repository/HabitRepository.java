@@ -108,12 +108,40 @@ public class HabitRepository {
     }
 
     public List<Habit> findNotCompleted(){
-        String sql = "SELECT * FROM habits WHERE completed = false";
+        String sql = "SELECT * FROM habits WHERE completed = false " +
+                    "ORDER BY CASE priority " +
+                    "WHEN 'High' THEN 1 " +
+                    "WHEN 'Medium' THEN 2 " +
+                    "WHEN 'Low' THEN 3 " +
+                    "END";
         return jdbcTemplate.query(sql, (rs,rowNum) -> new Habit(
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getBoolean("completed"),
                 Habit.Priority.valueOf(rs.getString("priority"))
         ));
+    }
+
+    public Habit findNextNotCompleted() {
+        String sql = """
+                SELECT * FROM habits 
+                WHERE completed = false 
+                ORDER BY 
+                    completed ASC,
+                    CASE priority
+                        WHEN 'High' THEN 1
+                        WHEN 'Medium' THEN 2
+                        WHEN 'Low' THEN 3
+                    END
+                """;
+
+        List<Habit> habits = jdbcTemplate.query(sql, (rs, rowNum) -> new Habit(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getBoolean("completed"),
+                Habit.Priority.valueOf(rs.getString("priority"))
+        ));
+
+        return habits.isEmpty() ? null : habits.get(0);
     }
 }
