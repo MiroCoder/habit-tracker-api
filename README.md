@@ -39,7 +39,10 @@ Spring Boot REST API for habit tracking, completion stats, and daily discipline 
 
 ## Web UI Preview
 
-![Habit Tracker Web UI](assets/habit-tracker-ui.png)
+<img width="1122" height="916" alt="{8D2EEFFD-7253-40DA-89C7-C22FAD050D39}" src="https://github.com/user-attachments/assets/c48e4b9e-9c54-4342-a903-9654d6cfdd4f" />
+
+<img width="905" height="846" alt="{80FF4793-7E26-4181-AD82-30BE14584D94}" src="https://github.com/user-attachments/assets/d260c504-0912-468c-88ff-533c48ba4d44" />
+
 
 ## Example: Create Habit
 
