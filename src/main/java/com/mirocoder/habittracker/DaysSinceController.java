@@ -26,7 +26,7 @@ public class DaysSinceController {
 
     @PostMapping("/days-since")
     public DaysSince create(@RequestBody DaysSinceRequest request) {
-        return daysSinceService.create(request.getName());
+        return daysSinceService.create(request.getName(), request.getStartDate());
     }
 
 

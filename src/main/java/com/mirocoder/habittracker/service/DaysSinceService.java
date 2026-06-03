@@ -20,11 +20,11 @@ public class DaysSinceService {
         return daysSinceRepository.findAll();
     }
 
-    public DaysSince create(String name) {
+    public DaysSince create(String name, LocalDate startDate) {
         DaysSince item = new DaysSince(
                 0,
                 name,
-                LocalDate.now(),
+                startDate,
                 0
         );
 

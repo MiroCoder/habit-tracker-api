@@ -172,14 +172,15 @@ async function loadDaysSince() {
 
 async function addDaysSince() {
     const name = document.getElementById("daysSinceName").value;
-
+    const startDate = document.getElementById("daysSinceStartDate").value;
     await fetch("/days-since", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            name: name
+            name: name,
+            startDate: startDate
         })
     });
 
