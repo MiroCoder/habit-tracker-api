@@ -25,3 +25,9 @@ CREATE TABLE IF NOT EXISTS daily_stats (
     percent DOUBLE PRECISION NOT NULL,
     day_type VARCHAR(50) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS days_since (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    start_date DATE NOT NULL
+)

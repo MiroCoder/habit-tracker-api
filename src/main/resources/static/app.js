@@ -148,6 +148,46 @@ async function loadWeeklySummary() {
     `;
 }
 
+async function loadDaysSince() {
+    const response = await fetch("/days-since");
+    const items = await response.json();
+
+    const container = document.getElementById("daysSince");
+    container.innerHTML = "";
+
+    items.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "habit";
+
+        div.innerHTML = `
+            <div>
+                <strong>${item.name}</strong>
+                <div>${item.daysCount} days</div>
+            </div>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+async function addDaysSince() {
+    const name = document.getElementById("daysSinceName").value;
+
+    await fetch("/days-since", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: name
+        })
+    });
+
+    document.getElementById("daysSinceName").value = "";
+
+    await refresh();
+}
+
 
 async function refresh() {
     await loadHabits();
@@ -155,6 +195,7 @@ async function refresh() {
     await loadNotCompletedHabits();
     await loadHistoryStats();
     await loadWeeklySummary();
+    await loadDaysSince();
 }
 
 refresh();
