@@ -30,4 +30,8 @@ public class DaysSinceService {
 
         return daysSinceRepository.save(item);
     }
+
+    public void updateStartDate(long id, LocalDate startDate) {
+        daysSinceRepository.updateStartDate(id, startDate);
+    }
 }

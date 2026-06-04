@@ -44,4 +44,9 @@ public class DaysSinceRepository {
         return item;
     }
 
+    public void updateStartDate(long id, LocalDate startDate) {
+        String sql = "UPDATE days_since SET start_date = ? WHERE id = ?";
+        jdbcTemplate.update(sql, startDate, id);
+    }
+
 }

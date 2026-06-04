@@ -164,7 +164,11 @@ async function loadDaysSince() {
                 <strong>${item.name}</strong>
                 <div>${item.daysCount} days</div>
             </div>
-        `;
+
+            <div class="actions">
+                    <button onclick="updateDaysSinceStartDate(${item.id})">Reset</button>
+                </div>
+            `;
 
         container.appendChild(div);
     });
@@ -185,6 +189,26 @@ async function addDaysSince() {
     });
 
     document.getElementById("daysSinceName").value = "";
+
+    await refresh();
+}
+
+async function updateDaysSinceStartDate(id) {
+    const startDate = prompt("New start date: YYYY-MM-DD");
+
+    if (!startDate) {
+        return;
+    }
+
+    await fetch(`/days-since/${id}/start-date`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            startDate: startDate
+        })
+    });
 
     await refresh();
 }
