@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 public class Habit {
     private long id;
+    private boolean required_today;
 
     @NotBlank(message = "Habit name cannot be empty")
     private String name;
@@ -16,11 +17,12 @@ public class Habit {
 
     }
 
-    public Habit(long id,String name, boolean completed, Priority priority) {
+    public Habit(long id,String name, boolean completed, Priority priority, boolean required_today) {
         this.id = id;
         this.name = name;
         this.completed = completed;
         this.priority = priority;
+        this.required_today = required_today;
     }
 
     public enum Priority {
@@ -57,6 +59,9 @@ public class Habit {
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
+
+    public boolean isRequiredToday() { return required_today;}
+    public void setRequiredToday(boolean required_today) {this.required_today = required_today;}
 
 
 }

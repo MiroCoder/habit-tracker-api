@@ -10,6 +10,7 @@ public class HabitRequest {
     private String name;
 
     private boolean completed;
+    private boolean required_today;
 
     @NotNull(message = "Priority is required")
     private Habit.Priority priority;
@@ -36,5 +37,13 @@ public class HabitRequest {
 
     public void setPriority(Habit.Priority priority) {
         this.priority = priority;
+    }
+
+    public boolean isRequiredToday() {
+        return required_today;
+    }
+
+    public void setRequiredToday(boolean required_today) {
+        this.required_today = required_today;
     }
 }

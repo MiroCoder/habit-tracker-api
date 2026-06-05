@@ -20,9 +20,9 @@ class HabitServiceTest {
     @Test
     void calculateCompletionCountsCompletedHabits() {
         ArrayList<Habit> habits = new ArrayList<>();
-        habits.add(new Habit(1L,"Code", true, Habit.Priority.High));
-        habits.add(new Habit(2L,"German", false, Habit.Priority.Medium));
-        habits.add(new Habit(3L,"Stretch", true, Habit.Priority.Low));
+        habits.add(new Habit(1L,"Code", true, Habit.Priority.High, true));
+        habits.add(new Habit(2L,"German", false, Habit.Priority.Medium, false));
+        habits.add(new Habit(3L,"Stretch", true, Habit.Priority.Low, false));
 
         int result = HabitService.calculateCompletion(habits);
 

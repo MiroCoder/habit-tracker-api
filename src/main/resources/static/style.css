@@ -88,6 +88,17 @@ button {
     }
 }
 
+.habit.required {
+    border-left: 4px solid #ff7a00;
+    padding-left: 12px;
+    background: rgba(255, 122, 0, 0.06);
+    border-radius: 10px;
+}
+
+.habit.required strong {
+    font-weight: 800;
+}
+
 .actions button {
     margin-left: 6px;
 }

@@ -7,12 +7,13 @@ async function loadHabits() {
 
     habits.forEach((habit, index) => {
         const div = document.createElement("div");
-        div.className = "habit";
+        div.className = habit.requiredToday ? "habit required" : "habit";
 
         div.innerHTML = `
             <div>
                 <strong class="${habit.completed ? "done" : ""}">
                     ${habit.name}
+                    ${habit.requiredToday ? "🔥 " : ""}
                 </strong>
                 <div>#${index + 1} | ${habit.priority} | completed: ${habit.completed}</div>
             </div>
@@ -43,7 +44,7 @@ async function loadStats() {
 async function addHabit() {
     const name = document.getElementById("habitName").value;
     const priority = document.getElementById("habitPriority").value;
-
+    const requiredToday = document.getElementById("habitRequiredToday").checked;
     await fetch("/habits", {
         method: "POST",
         headers: {
@@ -52,11 +53,13 @@ async function addHabit() {
         body: JSON.stringify({
             name: name,
             completed: false,
-            priority: priority
+            priority: priority,
+            requiredToday: requiredToday
         })
     });
 
     document.getElementById("habitName").value = "";
+    document.getElementById("habitRequiredToday").checked = false;
 
     await refresh();
 }

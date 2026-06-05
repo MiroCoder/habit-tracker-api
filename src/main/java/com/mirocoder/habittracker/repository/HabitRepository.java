@@ -43,7 +43,7 @@ public class HabitRepository {
     }
 
     public Habit save(Habit habit) {
-        String sql = "INSERT INTO habits (name, completed, priority) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO habits (name, completed, priority, required_today) VALUES (?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -52,6 +52,7 @@ public class HabitRepository {
             ps.setString(1, habit.getName());
             ps.setBoolean(2, habit.isCompleted());
             ps.setString(3, habit.getPriority().name());
+            ps.setBoolean(4, habit.isRequiredToday());
             return ps;
         }, keyHolder);
 
@@ -60,13 +61,14 @@ public class HabitRepository {
     }
 
     public Habit update(Habit habit) {
-        String sql = "UPDATE habits SET name = ?, completed = ?, priority = ? WHERE id = ?";
+        String sql = "UPDATE habits SET name = ?, completed = ?, priority = ?, required_today = ?, WHERE id = ?";
 
         int updatedRows = jdbcTemplate.update(
                 sql,
                 habit.getName(),
                 habit.isCompleted(),
                 habit.getPriority().name(),
+                habit.isRequiredToday(),
                 habit.getId()
         );
 
@@ -83,7 +85,8 @@ public class HabitRepository {
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getBoolean("completed"),
-                Habit.Priority.valueOf(rs.getString("priority"))
+                Habit.Priority.valueOf(rs.getString("priority")),
+                rs.getBoolean("required_today")
         );
     }
 
@@ -118,7 +121,8 @@ public class HabitRepository {
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getBoolean("completed"),
-                Habit.Priority.valueOf(rs.getString("priority"))
+                Habit.Priority.valueOf(rs.getString("priority")),
+                rs.getBoolean("required_today")
         ));
     }
 
@@ -139,7 +143,8 @@ public class HabitRepository {
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getBoolean("completed"),
-                Habit.Priority.valueOf(rs.getString("priority"))
+                Habit.Priority.valueOf(rs.getString("priority")),
+                rs.getBoolean("required_today")
         ));
 
         return habits.isEmpty() ? null : habits.get(0);

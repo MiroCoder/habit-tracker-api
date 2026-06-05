@@ -86,7 +86,8 @@ public class HabitService {
                 0,
                 request.getName(),
                 request.isCompleted(),
-                request.getPriority()
+                request.getPriority(),
+                request.isRequiredToday()
         );
 
         return habitRepository.save(habit);
