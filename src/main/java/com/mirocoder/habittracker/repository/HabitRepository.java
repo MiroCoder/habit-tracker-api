@@ -61,7 +61,7 @@ public class HabitRepository {
     }
 
     public Habit update(Habit habit) {
-        String sql = "UPDATE habits SET name = ?, completed = ?, priority = ?, required_today = ?, WHERE id = ?";
+        String sql = "UPDATE habits SET name = ?, completed = ?, priority = ?, required_today = ? WHERE id = ?";
 
         int updatedRows = jdbcTemplate.update(
                 sql,
