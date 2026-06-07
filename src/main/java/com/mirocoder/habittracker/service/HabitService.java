@@ -135,30 +135,53 @@ public class HabitService {
 
     public int resetDailyProgressIfNeeded() {
         LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
-        LocalDateTime todayNoon = now.toLocalDate().atTime(12, 0);
+        LocalDate today = now.toLocalDate();
         LocalDateTime lastResetAt = appSettingsRepository.getLastResetAt();
+        LocalDate lastResetDate = lastResetAt.toLocalDate();
 
-        if ((now.isAfter(todayNoon)  || now.isEqual(todayNoon)) && lastResetAt.isBefore(todayNoon)) {
-            int completed = habitRepository.countCompleted();
-            int total = habitRepository.countAll();
-            int notCompleted = total - completed;
-            double percent = total == 0 ? 0 : dayPercent(total, completed);
-            String dayType = total == 0 ? "Zero day" : dayType(total, completed);
-            DailyStats stats = new DailyStats(
+        if (!lastResetDate.isBefore(today)) {
+            return 0;
+        }
+
+        int completed = habitRepository.countCompleted();
+        int total = habitRepository.countAll();
+        int notCompleted = total - completed;
+        double percent = total == 0 ? 0 : dayPercent(total, completed);
+        String dayType = total == 0 ? "Zero day" : dayType(total, completed);
+
+        DailyStats lastDayStats = new DailyStats(
+                0,
+                lastResetDate,
+                total,
+                completed,
+                notCompleted,
+                percent,
+                dayType
+        );
+
+        dailyStatsRepository.saveOrUpdate(lastDayStats);
+
+        LocalDate missedDate = lastResetDate.plusDays(1);
+
+        while (missedDate.isBefore(today)) {
+            DailyStats zeroDay = new DailyStats(
                     0,
-                    now.toLocalDate(),
+                    missedDate,
                     total,
-                    completed,
-                    notCompleted,
-                    percent,
-                    dayType
+                    0,
+                    total,
+                    0,
+                    "Zero day"
             );
-            dailyStatsRepository.save(stats);
 
-            int resetCount = habitRepository.resetCompleted();
-            appSettingsRepository.updateLastResetAt(now);
-            return resetCount;
-        } return 0;
+            dailyStatsRepository.saveOrUpdate(zeroDay);
+            missedDate = missedDate.plusDays(1);
+        }
+
+        int resetCount = habitRepository.resetCompleted();
+        appSettingsRepository.updateLastResetAt(now);
+
+        return resetCount;
     }
 
     public List<Habit> getNotCompletedHabits(){

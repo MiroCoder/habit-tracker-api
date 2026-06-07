@@ -82,5 +82,15 @@ public class DailyStatsRepository {
         );
     }
 
+    public void deleteByDate(LocalDate date) {
+        String sql = "DELETE FROM daily_stats WHERE stat_date = ?";
+        jdbcTemplate.update(sql, date);
+    }
+
+    public DailyStats saveOrUpdate(DailyStats stats) {
+        deleteByDate(stats.getStatDate());
+        return save(stats);
+    }
+
 
 }

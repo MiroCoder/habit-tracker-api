@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.time.LocalDate;
 
 
-
+import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
+
 import jakarta.validation.Valid;
 
 @RestController
@@ -146,6 +148,14 @@ public class HabitController {
     @GetMapping("/habits/next")
     public Habit getNextHabit() {
         return habitService.getNextHabit();
+    }
+
+    @GetMapping("system/time")
+    public Map<String, Object> getTime() {
+        return Map.of(
+                "currentMillis", System.currentTimeMillis(),
+                "zone", ZoneId.systemDefault().toString()
+        );
     }
 
 }

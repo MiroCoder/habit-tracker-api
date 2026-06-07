@@ -28,6 +28,27 @@ async function loadHabits() {
     });
 }
 
+let systemTime;
+
+async function loadSystemTime() {
+    const response = await fetch("/system/time");
+    const data = await response.json();
+
+    systemTime = new Date(data.currentMillis);
+
+    renderSystemTime();
+
+    setInterval(() => {
+        systemTime = new Date(systemTime.getTime() + 1000);
+        renderSystemTime();
+    }, 1000);
+}
+
+function renderSystemTime() {
+    document.getElementById("systemTime").textContent =
+        systemTime.toLocaleString();
+}
+
 async function loadStats() {
     const response = await fetch("/habits/stats");
     const stats = await response.json();
@@ -107,6 +128,8 @@ async function loadNotCompletedHabits() {
         container.appendChild(div);
        });
 }
+
+
 
 async function loadHistoryStats() {
     const response = await fetch("/stats/history");
@@ -223,7 +246,8 @@ async function refresh() {
     await loadNotCompletedHabits();
     await loadHistoryStats();
     await loadWeeklySummary();
-    await loadDaysSince();
+    //await loadDaysSince();
+    loadSystemTime();
 }
 
 refresh();
