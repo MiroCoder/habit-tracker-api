@@ -75,6 +75,12 @@ public class HabitController {
         return ResponseEntity.ok(habit);
     }
 
+    @PatchMapping("/habits/{id}/uncomplete")
+    public void markAsNotCompleted(@PathVariable long id) {
+        habitService.markAsNotCompleted(id);
+    }
+
+
     @PutMapping("/habits/{id}")
     public ResponseEntity<Habit> updateHabit(
             @PathVariable long id,

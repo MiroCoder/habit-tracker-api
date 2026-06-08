@@ -61,6 +61,10 @@ public class HabitService {
         return habitRepository.update(habit);
     }
 
+    public void markAsNotCompleted(long id) {
+        habitRepository.markAsNotCompleted(id);
+    }
+
     public static String dayType(int habitsAmount, int habitsDone) {
         double percent = (habitsDone * 100.0) / habitsAmount;
 
