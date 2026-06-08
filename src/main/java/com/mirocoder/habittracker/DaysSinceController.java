@@ -39,5 +39,13 @@ public class DaysSinceController {
 
     }
 
+    @DeleteMapping("/days-since/{id}")
+    public void deleteById (
+            @PathVariable long id
+    ) {
+        daysSinceService.deleteById(id);
+        
+    }
+
 
 }

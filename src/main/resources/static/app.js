@@ -134,11 +134,12 @@ async function loadNotCompletedHabits() {
 async function loadHistoryStats() {
     const response = await fetch("/stats/history");
         const history = await response.json();
+        const visibleHistory = history.slice(0, 7);
 
         const container = document.getElementById("historyStats");
         container.innerHTML = "";
 
-        history.forEach(day => {
+        visibleHistory.forEach(day => {
             const div = document.createElement("div");
             div.className = "habit";
 
@@ -193,11 +194,24 @@ async function loadDaysSince() {
 
             <div class="actions">
                     <button onclick="updateDaysSinceStartDate(${item.id})">Reset</button>
+                    <button onclick="deleteDaysSince(${item.id})">Delete</button>
                 </div>
             `;
 
         container.appendChild(div);
     });
+}
+
+async function deleteDaysSince(id) {
+    await fetch(`/days-since/${id}`, {
+        method: "DELETE"
+    });
+
+    if (!confirm("Delete this counter?")) {
+        return;
+    }
+
+    await refresh();
 }
 
 async function addDaysSince() {
@@ -246,7 +260,7 @@ async function refresh() {
     await loadNotCompletedHabits();
     await loadHistoryStats();
     await loadWeeklySummary();
-    //await loadDaysSince();
+    await loadDaysSince();
     loadSystemTime();
 }
 

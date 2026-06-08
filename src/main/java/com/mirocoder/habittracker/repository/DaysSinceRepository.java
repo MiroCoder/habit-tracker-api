@@ -49,4 +49,9 @@ public class DaysSinceRepository {
         jdbcTemplate.update(sql, startDate, id);
     }
 
+    public void deleteById(long id) {
+        String sql = "DELETE FROM days_since WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
 }

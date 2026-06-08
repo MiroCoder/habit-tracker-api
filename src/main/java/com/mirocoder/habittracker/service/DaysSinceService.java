@@ -34,4 +34,8 @@ public class DaysSinceService {
     public void updateStartDate(long id, LocalDate startDate) {
         daysSinceRepository.updateStartDate(id, startDate);
     }
+
+    public void deleteById(long id) {
+        daysSinceRepository.deleteById(id);
+    }
 }
