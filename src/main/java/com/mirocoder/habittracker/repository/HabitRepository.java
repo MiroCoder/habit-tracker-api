@@ -105,7 +105,7 @@ public class HabitRepository {
         return jdbcTemplate.update(sql, id) > 0;
     }
 
-    public boolean markAsNotCompleted(long id) {
+    public void markAsNotCompleted(long id) {
         String sql = "UPDATE habits SET completed = true WHERE id = ?";
         jdbcTemplate.update(sql,id);
     }

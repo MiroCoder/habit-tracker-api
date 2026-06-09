@@ -20,6 +20,7 @@ async function loadHabits() {
 
             <div class="actions">
                 <button onclick="completeHabit(${habit.id})">Done</button>
+                <button onclick="uncompleteHabit(${habit.id})">Undo</button>
                 <button onclick="deleteHabit(${habit.id})">Delete</button>
             </div>
         `;
@@ -87,6 +88,14 @@ async function addHabit() {
 
 async function completeHabit(id) {
     await fetch(`/habits/${id}/complete`, {
+        method: "PATCH"
+    });
+
+    await refresh();
+}
+
+async function uncompleteHabit(id) {
+    await fetch(`/habits/${id}/uncomplete`, {
         method: "PATCH"
     });
 
@@ -203,13 +212,15 @@ async function loadDaysSince() {
 }
 
 async function deleteDaysSince(id) {
+     if (!confirm("Delete this counter?")) {
+            return;
+        }
+
     await fetch(`/days-since/${id}`, {
         method: "DELETE"
     });
 
-    if (!confirm("Delete this counter?")) {
-        return;
-    }
+
 
     await refresh();
 }
@@ -261,7 +272,7 @@ async function refresh() {
     await loadHistoryStats();
     await loadWeeklySummary();
     await loadDaysSince();
-    loadSystemTime();
 }
 
+loadSystemTime();
 refresh();
