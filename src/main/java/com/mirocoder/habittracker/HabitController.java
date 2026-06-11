@@ -10,6 +10,7 @@ import com.mirocoder.habittracker.model.HabitStats;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.mirocoder.habittracker.dto.HabitRequest;
+import com.mirocoder.habittracker.dto.HabitStreakResponse;
 
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,6 +52,11 @@ public class HabitController {
     @GetMapping("/habits/stats")
     public HabitStats  getStats() {
         return habitService.getStats();
+    }
+
+    @GetMapping("/habits/{id}/streak")
+    public HabitStreakResponse getHabitStreak(@PathVariable long id) {
+        return habitService.getHabitStreak(id);
     }
 
     @GetMapping("/habits/{id}")

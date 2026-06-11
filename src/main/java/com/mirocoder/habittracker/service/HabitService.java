@@ -8,7 +8,9 @@ import com.mirocoder.habittracker.repository.DailyStatsRepository;
 import com.mirocoder.habittracker.repository.HabitRepository;
 import org.springframework.stereotype.Service;
 import com.mirocoder.habittracker.model.DailyStats;
+import com.mirocoder.habittracker.dto.HabitStreakResponse;
 
+import com.mirocoder.habittracker.repository.HabitCompletionRepository;
 import java.time.LocalDate;
 import java.util.List;
 import com.mirocoder.habittracker.repository.AppSettingsRepository;
@@ -21,12 +23,14 @@ public class HabitService {
     private final HabitRepository habitRepository;
     private final AppSettingsRepository appSettingsRepository;
     private final DailyStatsRepository dailyStatsRepository;
+    private final HabitCompletionRepository habitCompletionRepository;
 
     public HabitService(HabitRepository habitRepository,
-                        AppSettingsRepository appSettingsRepository, DailyStatsRepository dailyStatsRepository) {
+                        AppSettingsRepository appSettingsRepository, DailyStatsRepository dailyStatsRepository, HabitCompletionRepository habitCompletionRepository) {
         this.habitRepository = habitRepository;
         this.appSettingsRepository = appSettingsRepository;
         this.dailyStatsRepository = dailyStatsRepository;
+        this.habitCompletionRepository = habitCompletionRepository;
     }
 
 
@@ -58,11 +62,13 @@ public class HabitService {
         }
 
         habit.setCompleted(true);
+        habitCompletionRepository.save(id, LocalDate.now());
         return habitRepository.update(habit);
     }
 
     public void markAsNotCompleted(long id) {
         habitRepository.markAsNotCompleted(id);
+        habitCompletionRepository.deleteByHabitIdAndDate(id, LocalDate.now());
     }
 
     public static String dayType(int habitsAmount, int habitsDone) {
@@ -263,5 +269,23 @@ public class HabitService {
 
     public Habit getNextHabit() {
         return habitRepository.findNextNotCompleted();
+    }
+
+    public HabitStreakResponse getHabitStreak(long habitId) {
+        List<LocalDate> dates = habitCompletionRepository.findCompletionDates(habitId);
+
+        int streak = 0;
+        LocalDate currentDate = LocalDate.now();
+
+        for (LocalDate date : dates) {
+            if (date.equals(currentDate)) {
+                streak++;
+                currentDate = currentDate.minusDays(1);
+            } else if (date.isBefore(currentDate)) {
+                break;
+            }
+        }
+
+        return new HabitStreakResponse(habitId, streak);
     }
 }

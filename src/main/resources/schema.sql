@@ -33,11 +33,11 @@ CREATE TABLE IF NOT EXISTS days_since (
     start_date DATE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS streak (
-  id BIGSERIAL PRIMARY KEY,
-  habit_id BIGINT NOT NULL,
-  completition_date DATE  NOT NULL,
-  CONSTRAINT uq_streak UNIQUE (habit_id, conpletition_date)
-);
+CREATE TABLE IF NOT EXISTS habit_completions (
+                                                 id BIGSERIAL PRIMARY KEY,
+                                                 habit_id BIGINT NOT NULL,
+                                                 completion_date DATE NOT NULL,
+                                                 CONSTRAINT uq_habit_completion_day UNIQUE (habit_id, completion_date)
+    );
 
 ALTER TABLE habits ADD COLUMN IF NOT EXISTS required_today BOOLEAN DEFAULT FALSE;

@@ -3,9 +3,12 @@ import com.mirocoder.habittracker.model.Habit;
 import com.mirocoder.habittracker.model.DailyStats;
 import com.mirocoder.habittracker.repository.AppSettingsRepository;
 import com.mirocoder.habittracker.repository.DailyStatsRepository;
+import com.mirocoder.habittracker.repository.HabitCompletionRepository;
 import com.mirocoder.habittracker.repository.HabitRepository;
 
 import java.time.LocalDate;
+
+import org.mockito.Mockito;
 
 import static org.mockito.Mockito.*;
 
@@ -16,6 +19,8 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HabitServiceTest {
+
+    private HabitService service;
 
     @Test
     void calculateCompletionCountsCompletedHabits() {
@@ -35,7 +40,14 @@ class HabitServiceTest {
         AppSettingsRepository appSettingsRepository = mock(AppSettingsRepository.class);
         DailyStatsRepository dailyStatsRepository = mock(DailyStatsRepository.class);
 
-        HabitService service = new HabitService(habitRepository, appSettingsRepository, dailyStatsRepository);
+        HabitCompletionRepository habitCompletionRepository = Mockito.mock(HabitCompletionRepository.class);
+
+        service = new HabitService(
+                habitRepository,
+                appSettingsRepository,
+                dailyStatsRepository,
+                habitCompletionRepository
+        );
 
         LocalDate date = LocalDate.of(2026, 6, 1);
 
