@@ -5,17 +5,29 @@ async function loadHabits() {
     const container = document.getElementById("habits");
     container.innerHTML = "";
 
-    habits.forEach((habit, index) => {
+    for (const [index, habit] of habits.entries()) {
         const div = document.createElement("div");
         div.className = habit.requiredToday ? "habit required" : "habit";
+
+        let currentStreak = 0;
+
+        try {
+            const streakResponse = await fetch(`/habits/${habit.id}/streak`);
+            const streakData = await streakResponse.json();
+            currentStreak = streakData.currentStreak;
+        } catch (error) {
+            console.error("Failed to load streak", error);
+        }
 
         div.innerHTML = `
             <div>
                 <strong class="${habit.completed ? "done" : ""}">
                     ${habit.name}
                     ${habit.requiredToday ? "🔥 " : ""}
+
                 </strong>
                 <div>#${index + 1} | ${habit.priority} | completed: ${habit.completed}</div>
+                <div>🔥 Streak: ${currentStreak}</div>
             </div>
 
             <div class="actions">
@@ -26,7 +38,7 @@ async function loadHabits() {
         `;
 
         container.appendChild(div);
-    });
+    }
 }
 
 let systemTime;
@@ -202,9 +214,14 @@ async function loadDaysSince() {
             </div>
 
             <div class="actions">
-                    <button onclick="updateDaysSinceStartDate(${item.id})">Reset</button>
-                    <button onclick="deleteDaysSince(${item.id})">Delete</button>
-                </div>
+                <input
+                    type="date"
+                    value="${new Date().toISOString().split("T")[0]}"
+                    max="${new Date().toISOString().split("T")[0]}"
+                    onchange="updateDaysSinceStartDate(${item.id}, this.value)"
+                >
+                <button onclick="deleteDaysSince(${item.id})">Delete</button>
+            </div>
             `;
 
         container.appendChild(div);
@@ -244,9 +261,7 @@ async function addDaysSince() {
     await refresh();
 }
 
-async function updateDaysSinceStartDate(id) {
-    const startDate = prompt("New start date: YYYY-MM-DD");
-
+async function updateDaysSinceStartDate(id, startDate) {
     if (!startDate) {
         return;
     }
