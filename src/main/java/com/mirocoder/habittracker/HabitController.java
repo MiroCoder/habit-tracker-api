@@ -54,6 +54,24 @@ public class HabitController {
         return habitService.getStats();
     }
 
+    @GetMapping("/stats/today/message")
+    public String getTodayMessage() {
+        HabitStats stats = getStats();
+
+        if (stats.getDayType().equals("System day")) {
+            return "System day - you invested in future self.";
+        }else if (stats.getDayType().equals("Strong day")) {
+            return "Strong day - keep going.";
+        }else if (stats.getDayType().equals("Recovery day")) {
+            return "Recovery day - stay clean.";
+        } else if (stats.getDayType().equals("Perfect day")) {
+            return "Perfect day - clean investment.";
+        } else {
+            return "Reset - one action immediately.";
+        }
+
+    }
+
     @GetMapping("/habits/{id}/streak")
     public HabitStreakResponse getHabitStreak(@PathVariable long id) {
         return habitService.getHabitStreak(id);
