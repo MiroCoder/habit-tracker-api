@@ -27,7 +27,7 @@ async function loadHabits() {
 
                 </strong>
                 <div>#${index + 1} | ${habit.priority} | completed: ${habit.completed}</div>
-                <div>🔥 Streak: ${currentStreak}</div>
+                <div>${streakText}</div>
             </div>
 
             <div class="actions">
@@ -206,6 +206,16 @@ async function loadDaysSince() {
     items.forEach(item => {
         const div = document.createElement("div");
         div.className = "habit";
+
+        let streakText;
+
+        if (currentStreak === 0) {
+            streakText = "No streak yet";
+        } else if (currentStreak === 1) {
+            streakText = "🔥 1 day";
+        } else {
+            streakText = `🔥 ${currentStreak} days`;
+        }
 
         div.innerHTML = `
             <div>
