@@ -188,4 +188,9 @@ public class HabitController {
         );
     }
 
+    @GetMapping("/habits/required")
+    public List<Habit> getRequiredToday() {
+        return habitService.getRequiredToday();
+    }
+
 }

@@ -19,6 +19,16 @@ async function loadHabits() {
             console.error("Failed to load streak", error);
         }
 
+        let streakText;
+
+        if (currentStreak === 0) {
+            streakText = "No streak yet";
+        } else if (currentStreak === 1) {
+            streakText = "🔥 1 day";
+        } else {
+            streakText = `🔥 ${currentStreak} days`;
+        }
+
         div.innerHTML = `
             <div>
                 <strong class="${habit.completed ? "done" : ""}">
@@ -207,15 +217,7 @@ async function loadDaysSince() {
         const div = document.createElement("div");
         div.className = "habit";
 
-        let streakText;
 
-        if (currentStreak === 0) {
-            streakText = "No streak yet";
-        } else if (currentStreak === 1) {
-            streakText = "🔥 1 day";
-        } else {
-            streakText = `🔥 ${currentStreak} days`;
-        }
 
         div.innerHTML = `
             <div>

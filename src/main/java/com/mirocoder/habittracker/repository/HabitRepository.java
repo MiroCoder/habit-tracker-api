@@ -154,4 +154,9 @@ public class HabitRepository {
 
         return habits.isEmpty() ? null : habits.get(0);
     }
+
+    public List<Habit> findRequiredToday() {
+        String sql = "SELECT * FROM habits WHERE required_today = true";
+        return jdbcTemplate.query(sql, this::mapRow);
+    }
 }

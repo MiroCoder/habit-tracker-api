@@ -288,4 +288,8 @@ public class HabitService {
 
         return new HabitStreakResponse(habitId, streak);
     }
+
+    public List<Habit> getRequiredToday() {
+        return habitRepository.findRequiredToday();
+    }
 }
