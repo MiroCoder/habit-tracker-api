@@ -193,4 +193,9 @@ public class HabitController {
         return habitService.getRequiredToday();
     }
 
+    @GetMapping("/system/day-status")
+    public String getSystemDayStatus() {
+        return habitService.getSystemDayStatus();
+    }
+
 }

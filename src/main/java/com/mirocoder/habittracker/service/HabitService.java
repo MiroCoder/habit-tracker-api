@@ -11,9 +11,12 @@ import com.mirocoder.habittracker.model.DailyStats;
 import com.mirocoder.habittracker.dto.HabitStreakResponse;
 
 import com.mirocoder.habittracker.repository.HabitCompletionRepository;
+
 import java.time.LocalDate;
 import java.util.List;
+
 import com.mirocoder.habittracker.repository.AppSettingsRepository;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -194,7 +197,7 @@ public class HabitService {
         return resetCount;
     }
 
-    public List<Habit> getNotCompletedHabits(){
+    public List<Habit> getNotCompletedHabits() {
         return habitRepository.findNotCompleted();
     }
 
@@ -203,7 +206,7 @@ public class HabitService {
     }
 
     public DailyStats updateDailyStats(LocalDate date, int total, int completed) {
-        if (total < 0 || completed < 0 || completed > total){
+        if (total < 0 || completed < 0 || completed > total) {
             throw new IllegalArgumentException("Invalid values for total and completed");
         }
         int notCompleted = total - completed;
@@ -226,7 +229,7 @@ public class HabitService {
     }
 
     public StatsSummaryResponse getStatsSummary(int days) {
-        List<DailyStats> history =dailyStatsRepository.findLastDays(days);
+        List<DailyStats> history = dailyStatsRepository.findLastDays(days);
 
         if (history.isEmpty()) {
             return new StatsSummaryResponse(0, 0, 0, 0, 0, 0, 0);
@@ -291,5 +294,24 @@ public class HabitService {
 
     public List<Habit> getRequiredToday() {
         return habitRepository.findRequiredToday();
+    }
+
+    public String getSystemDayStatus() {
+        int total = habitRepository.countAll();
+        int completed = habitRepository.countCompleted();
+
+        if (total == 0) {
+            return "Debt Day";
+        }
+        double percent = (completed * 100.0) / total;
+        if (percent >= 80) {
+            return "Investment Day";
+        } else if (percent >= 50) {
+            return "Credit Day";
+        } else if (percent > 0) {
+            return "Reset Day";
+        } else {
+            return "Debt Day";
+        }
     }
 }

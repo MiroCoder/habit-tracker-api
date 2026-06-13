@@ -291,6 +291,13 @@ async function updateDaysSinceStartDate(id, startDate) {
     await refresh();
 }
 
+async function loadDayStatus() {
+    const response = await fetch("/system/day-status");
+    const status = await response.text();
+
+    document.getElementById("dayStatus").textContent = status;
+    }
+
 
 async function refresh() {
     await loadHabits();
@@ -299,6 +306,7 @@ async function refresh() {
     await loadHistoryStats();
     await loadWeeklySummary();
     await loadDaysSince();
+    await loadDayStatus();
 }
 
 loadSystemTime();
