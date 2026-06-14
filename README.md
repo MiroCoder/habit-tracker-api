@@ -1,111 +1,147 @@
-Spring Boot REST API for habit tracking, completion stats, and daily discipline logic.
+# Habit Tracker
+
+Full-stack habit tracking application built with Spring Boot, PostgreSQL, and vanilla JavaScript.
+
+The application tracks daily habit completion, streaks, weekly statistics, historical day records, and counters for time since a selected event.
+
+## Screenshots
+
+![Habit Tracker dashboard](assets/habit-tracker-dashboard.png)
+
+<details>
+<summary>Full desktop view</summary>
+
+![Habit Tracker full desktop view](assets/habit-tracker-full.png)
+
+</details>
+
+## Features
+
+- Create, complete, undo, update, and delete habits
+- Assign habit priority and mark habits as required today
+- Calculate daily completion progress and day type
+- Track completion streaks for individual habits
+- Store daily statistics and display seven-day summaries
+- Browse historical records by day
+- Track days since an event and reset its start date
+- Automatically reset daily habit completion
+- Responsive dark web interface
 
 ## Tech Stack
 
 - Java 21
-- Spring Boot
-- Spring Web
+- Spring Boot 4
+- Spring Web MVC
+- Spring JDBC
+- PostgreSQL
 - Maven
-- JUnit
-- Jakarta Validation
-- REST API
+- JUnit 5 and Mockito
+- HTML, CSS, and vanilla JavaScript
 
-## Features
+## Running Locally
 
-- Get all habits
-- Get habit by ID
-- Add new habit
-- Update habit
-- Mark habit as completed
-- Delete habit
-- Validate request data
-- Calculate completion statistics
-- Classify day type: Perfect, Strong, System, Recovery, Zero
+### Requirements
 
-## API Endpoints
+- Java 21
+- PostgreSQL
+
+### Database
+
+Create the database:
+
+```sql
+CREATE DATABASE habit_tracker;
+```
+
+The default connection is configured in `src/main/resources/application.properties`:
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/habit_tracker
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+```
+
+Tables are created automatically from `schema.sql`.
+
+### Start
+
+Windows:
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+Linux or macOS:
+
+```bash
+./mvnw spring-boot:run
+```
+
+Open [http://localhost:8081](http://localhost:8081).
+
+## API
+
+### Habits
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/habits` | Get all habits |
-| GET | `/habits/{id}` | Get habit by ID |
-| POST | `/habits` | Create habit |
-| PUT | `/habits/{id}` | Update habit |
-| PATCH | `/habits/{id}/complete` | Mark habit completed |
-| DELETE | `/habits/{id}` | Delete habit |
-| GET | `/habits/stats` | Get habit statistics |
-| GET | `/habits/search?name=Code` | Search habit by name |
-| GET | `/habits/priority/{priority}` | Filter habits by priority |
+| `GET` | `/habits` | List habits |
+| `POST` | `/habits` | Create a habit |
+| `GET` | `/habits/{id}` | Get a habit |
+| `PUT` | `/habits/{id}` | Update a habit |
+| `PATCH` | `/habits/{id}/complete` | Mark as completed |
+| `PATCH` | `/habits/{id}/uncomplete` | Undo completion |
+| `DELETE` | `/habits/{id}` | Delete a habit |
+| `GET` | `/habits/{id}/streak` | Get the current streak |
+| `GET` | `/habits/not-completed` | List active habits |
+| `GET` | `/habits/required` | List habits required today |
+| `GET` | `/habits/priority/{priority}` | Filter by priority |
+| `GET` | `/habits/search?name={name}` | Find by name |
+| `GET` | `/habits/next` | Get the next habit |
 
+### Statistics
 
-## Web UI Preview
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/habits/stats` | Get today's statistics |
+| `GET` | `/stats/history` | Get daily records |
+| `PATCH` | `/stats/history/{date}` | Update a daily record |
+| `GET` | `/stats/summary?days=7` | Get a period summary |
+| `GET` | `/stats/today/message` | Get today's progress message |
+| `GET` | `/system/day-status` | Get the current day status |
+| `GET` | `/system/time` | Get server time |
 
-<img width="1122" height="916" alt="{8D2EEFFD-7253-40DA-89C7-C22FAD050D39}" src="https://github.com/user-attachments/assets/c48e4b9e-9c54-4342-a903-9654d6cfdd4f" />
+### Days Since
 
-<img width="905" height="846" alt="{80FF4793-7E26-4181-AD82-30BE14584D94}" src="https://github.com/user-attachments/assets/d260c504-0912-468c-88ff-533c48ba4d44" />
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/days-since` | List counters |
+| `POST` | `/days-since` | Create a counter |
+| `PATCH` | `/days-since/{id}/start-date` | Change the start date |
+| `DELETE` | `/days-since/{id}` | Delete a counter |
 
+## Tests
 
-## Example: Create Habit
-
-### Request
-
-`POST /habits`
-
-```json
-{
-  "name": "Read",
-  "completed": false,
-  "priority": "Medium"
-}
+```powershell
+.\mvnw.cmd test
 ```
 
-### Response
+The test suite covers application startup and habit service behavior.
 
-```json
-{
-  "id": 4,
-  "name": "Read",
-  "completed": false,
-  "priority": "Medium"
-}
+## Project Structure
+
+```text
+src/main/java/.../
+├── controller endpoints
+├── dto request and response models
+├── model domain objects
+├── repository JDBC data access
+├── service business logic
+├── scheduler daily reset
+└── startup reset check
+
+src/main/resources/
+├── static/       web interface
+├── schema.sql    database schema
+└── application.properties
 ```
-
-## Example: Get Habit by ID
-
-### Request
-
-`GET /habits/1`
-
-### Response
-
-```json
-{
-  "id": 1,
-  "name": "Code",
-  "completed": true,
-  "priority": "High"
-}
-```
-
-## Example: Habit Stats
-
-### Request
-
-`GET /habits/stats`
-
-### Response
-
-```json
-{
-  "total": 3,
-  "completed": 1,
-  "notCompleted": 2,
-  "percent": 33.333333333333336,
-  "dayType": "Recovery day"
-}
-```
-
-## Development Note
-
-The HTML structure and API integration were implemented by me.
-
-The visual CSS styling was AI-assisted, then reviewed and adapted by me.

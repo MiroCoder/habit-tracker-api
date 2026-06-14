@@ -2,83 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Habit Tracker API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Habit Tracker</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app">
-    <h1>Habit Tracker</h1>
-    <p class="subtitle">Spring Boot</p>
+<main class="app">
+    <header class="page-header">
+        <div>
+            <h1>Habit Tracker</h1>
+            <p class="subtitle">Spring Boot</p>
+        </div>
+        <time id="systemTime">Loading time...</time>
+    </header>
 
-    <div id="systemTime">Loading time...</div>
-
-    <section class="card">
+    <section class="card add-card">
         <h2>Add habit</h2>
+        <div class="add-form">
+            <input id="habitName" type="text" placeholder="Habit name" aria-label="Habit name">
 
-        <input id="habitName" type="text" placeholder="Habit name">
+            <select id="habitPriority" aria-label="Habit priority">
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
 
-        <select id="habitPriority">
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-        </select>
+            <label class="checkbox-label">
+                <input id="habitRequiredToday" type="checkbox">
+                Must today
+            </label>
 
-        <label>
-            <input id="habitRequiredToday" type="checkbox">
-            Must today
-        </label>
-
-        <button onclick="addHabit()">Add</button>
+            <button type="button" onclick="addHabit()">Add</button>
+        </div>
     </section>
 
     <div class="dashboard-grid">
-        <section class="card">
-            <h2>Today</h2>
+        <div class="dashboard-column">
+            <section class="card">
+                <h2>Today</h2>
+                <h3>Future Self Bank</h3>
+                <p id="dayStatus" class="status-text">Loading...</p>
 
-            <h3>Future Self Bank</h3>
-            <div id="dayStatus">Loading...</div>
+                <div id="stats">Loading...</div>
+                <div class="progress" aria-label="Daily progress">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+            </section>
 
-            <div id="stats">Loading...</div>
-        </section>
+            <section class="card">
+                <h2>Records</h2>
+                <div id="historyStats" class="list">Loading...</div>
+            </section>
 
-<!--    <section class="card">-->
-<!--        <h2>Stats</h2>-->
-<!--        <div id="stats">Loading...</div>-->
-<!--    </section>-->
+            <section class="card">
+                <h2>Habits</h2>
+                <div id="habits" class="list">Loading...</div>
+            </section>
+        </div>
 
-    <section class="card">
-        <h2>Weekly summary</h2>
-        <div id="weeklySummary">Loading...</div>
-    </section>
+        <div class="dashboard-column">
+            <section class="card">
+                <h2>Weekly summary</h2>
+                <div id="weeklySummary">Loading...</div>
+            </section>
 
-    <section class = "card">
-        <h2>Records</h2>
-        <div id ="historyStats"></div>
-    </section>
+            <section class="card">
+                <h2>Active</h2>
+                <div id="notCompletedHabits" class="list">Loading...</div>
+            </section>
 
-    <section class="card">
-        <h2>Active</h2>
-        <div id="notCompletedHabits"></div>
-    </section>
+            <section class="card">
+                <h2>Days since</h2>
 
-    <section class="card">
-        <h2>Habits</h2>
-        <div id="habits"></div>
-    </section>
+                <div class="days-since-form">
+                    <input id="daysSinceName" type="text" placeholder="No scrolling" aria-label="Counter name">
+                    <input id="daysSinceStartDate" type="date" aria-label="Counter start date">
+                    <button type="button" onclick="addDaysSince()">Add</button>
+                </div>
 
-    <section class="card">
-            <h2>Days since</h2>
-
-            <input id="daysSinceName" type="text" placeholder="No scroll / No smoking">
-            <input id ="daysSinceStartDate" type = "date">
-            <button onclick="addDaysSince()">Add</button>
-
-            <div id="daysSince"></div>
-    </section>
+                <div id="daysSince" class="list">Loading...</div>
+            </section>
+        </div>
     </div>
-</div>
-
-
+</main>
 
 <script src="app.js"></script>
 </body>
