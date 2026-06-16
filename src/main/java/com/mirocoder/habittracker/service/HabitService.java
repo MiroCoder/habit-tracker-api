@@ -69,9 +69,16 @@ public class HabitService {
         return habitRepository.update(habit);
     }
 
-    public void markAsNotCompleted(long id) {
+    public Habit markAsNotCompleted(long id) {
+        Habit habit = habitRepository.findById(id);
+
+        if(habit == null) {
+            return null;
+        }
+
         habitRepository.markAsNotCompleted(id);
         habitCompletionRepository.deleteByHabitIdAndDate(id, LocalDate.now());
+        return habitRepository.findById(id);
     }
 
     public static String dayType(int habitsAmount, int habitsDone) {

@@ -100,8 +100,14 @@ public class HabitController {
     }
 
     @PatchMapping("/habits/{id}/uncomplete")
-    public void markAsNotCompleted(@PathVariable long id) {
-        habitService.markAsNotCompleted(id);
+    public ResponseEntity<Habit> markAsNotCompleted(@PathVariable long id) {
+        Habit habit = habitService.markAsNotCompleted(id);
+
+        if (habit == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(habit);
     }
 
 

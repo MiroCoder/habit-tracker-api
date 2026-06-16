@@ -252,7 +252,7 @@ async function loadDaysSince() {
                     aria-label="Start date for ${escapeHtml(item.name)}"
                     onchange="updateDaysSinceStartDate(${item.id}, this.value)"
                 >
-                <button type="button" class="button-secondary" onclick="resetDaysSinceToday(${item.id})">Reset today</button>
+                <button type="button" class="button-secondary" onclick="resetDaysSinceToday(${item.id})">Reset</button>
                 <button type="button" class="button-danger" onclick="deleteDaysSince(${item.id})">Delete</button>
             </div>
         </div>

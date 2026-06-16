@@ -3,6 +3,7 @@ package com.mirocoder.habittracker.dto;
 import com.mirocoder.habittracker.model.Habit;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public class HabitRequest {
 
