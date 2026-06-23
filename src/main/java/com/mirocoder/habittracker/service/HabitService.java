@@ -127,16 +127,17 @@ public class HabitService {
         return new HabitStats(total, completed, notCompleted, percent, dayType);
     }
 
-    public Habit updateHabit(long id, Habit updatedHabit) {
+    public Habit updateHabit(long id, HabitRequest request) {
         Habit habit = habitRepository.findById(id);
 
         if (habit == null) {
             return null;
         }
 
-        habit.setName(updatedHabit.getName());
-        habit.setCompleted(updatedHabit.isCompleted());
-        habit.setPriority(updatedHabit.getPriority());
+        habit.setName(request.getName());
+        habit.setCompleted(request.isCompleted());
+        habit.setPriority(request.getPriority());
+        habit.setRequiredToday(request.isRequiredToday());
 
         return habitRepository.update(habit);
     }

@@ -1,3 +1,6 @@
+let editingHabitId = null;
+let habitsCache = [];
+
 function escapeHtml(value) {
     return String(value)
         .replaceAll("&", "&amp;")
@@ -22,6 +25,7 @@ function renderEmpty(container, message) {
 async function loadHabits() {
     const response = await fetch("/habits");
     const habits = await response.json();
+    habitsCache = habits;
     const container = document.getElementById("habits");
 
     if (habits.length === 0) {
@@ -62,6 +66,7 @@ async function loadHabits() {
                 <div class="actions">
                     <button type="button" onclick="completeHabit(${habit.id})" ${habit.completed ? "disabled" : ""}>Done</button>
                     <button type="button" class="button-secondary" onclick="uncompleteHabit(${habit.id})" ${habit.completed ? "" : "disabled"}>Undo</button>
+                    <button onclick="startEditHabit(${habit.id})">Edit</button>
                     <button type="button" class="button-danger" onclick="deleteHabit(${habit.id})">Delete</button>
                 </div>
             </div>
@@ -118,19 +123,96 @@ async function addHabit() {
     const priority = document.getElementById("habitPriority").value;
     const requiredToday = document.getElementById("habitRequiredToday").checked;
 
-    await fetch("/habits", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
+    const oldHabit = habitsCache.find(h => h.id === editingHabitId);
+
+    const habitBody = {
             name,
-            completed: false,
+            completed: oldHabit ? oldHabit.completed : false,
             priority,
             requiredToday
-        })
-    });
+        };
+
+       if (editingHabitId === null) {
+            await fetch("/habits", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(habitBody)
+            });
+       } else {
+            await fetch(`/habits/${editingHabitId}`, {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(habitBody)
+            });
+
+            editingHabitId = null;
+       }
 
     nameInput.value = "";
     document.getElementById("habitRequiredToday").checked = false;
+    await refresh();
+}
+
+function startEditHabit(id) {
+    const habit = habitsCache.find(h => h.id === id);
+
+    if (!habit) {
+        return;
+    }
+
+    editingHabitId = id;
+
+    document.getElementById("editHabitName").value = habit.name;
+    document.getElementById("editHabitPriority").value = habit.priority;
+    document.getElementById("editHabitRequiredToday").checked = habit.requiredToday;
+
+    document.getElementById("editModal").classList.remove("hidden");
+}
+
+function closeEditModal() {
+    editingHabitId = null;
+    document.getElementById("editModal").classList.add("hidden");
+}
+
+async function saveEditHabit() {
+    const oldHabit = habitsCache.find(h => h.id === editingHabitId);
+
+    if (!oldHabit) {
+        return;
+    }
+
+    const name = document.getElementById("editHabitName").value.trim();
+
+    if (!name) {
+        document.getElementById("editHabitName").focus();
+        return;
+    }
+
+    const priority = document.getElementById("editHabitPriority").value;
+    const requiredToday = document.getElementById("editHabitRequiredToday").checked;
+
+    const habitBody = {
+        name: name,
+        completed: oldHabit.completed,
+        priority: priority,
+        requiredToday: requiredToday
+    };
+
+    console.log("EDIT BODY:", habitBody);
+
+    const response = await fetch(`/habits/${editingHabitId}`, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(habitBody)
+    });
+
+    if (!response.ok) {
+        console.error("Edit failed:", response.status, await response.text());
+        alert("Edit failed. Check console.");
+        return;
+    }
+
+    closeEditModal();
     await refresh();
 }
 

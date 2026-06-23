@@ -84,6 +84,31 @@
             </section>
         </div>
     </div>
+
+    <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Edit habit</h2>
+
+            <input id="editHabitName" type="text" placeholder="Habit name">
+
+            <select id="editHabitPriority">
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+
+            <label class="checkbox-label">
+                <input id="editHabitRequiredToday" type="checkbox">
+                Must today
+            </label>
+
+            <div class="actions">
+                <button type="button" onclick="saveEditHabit()">Save</button>
+                <button type="button" class="button-secondary" onclick="closeEditModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
 </main>
 
 <script src="app.js"></script>
