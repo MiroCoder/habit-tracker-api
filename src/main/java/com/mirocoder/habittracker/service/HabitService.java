@@ -1,5 +1,6 @@
 package com.mirocoder.habittracker.service;
 
+import com.mirocoder.habittracker.dto.DailyPhraseResponse;
 import com.mirocoder.habittracker.dto.HabitRequest;
 import com.mirocoder.habittracker.dto.StatsSummaryResponse;
 import com.mirocoder.habittracker.model.Habit;
@@ -321,5 +322,27 @@ public class HabitService {
         } else {
             return "Debt Day";
         }
+    }
+
+    public DailyPhraseResponse getDailyPhrase() {
+        List<DailyPhraseResponse> phrases = List.of(
+                new DailyPhraseResponse(
+                        "The only way to do great work is to love what you do.",
+                        "Steve Jobs"
+                ),
+                new DailyPhraseResponse(
+                        "We are stubborn on vision. We are flexible on details.",
+                        "Jeff Bezos"
+                ),
+                new DailyPhraseResponse(
+                        "Don't be a know-it-all; be a learn-it-all.",
+                        "Satya Nadella"
+                )
+        );
+
+        int dayOfYear = LocalDate.now().getDayOfYear();
+        int index = (dayOfYear -1) % phrases.size();
+
+        return phrases.get(index);
     }
 }
