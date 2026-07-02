@@ -409,3 +409,23 @@ button:disabled {
     flex-direction: column;
     gap: 12px;
 }
+
+#dailyPhrase {
+    margin: 10px 0 18px;
+    padding: 12px 14px;
+    border-left: 3px solid #6c63ff;
+    background: rgba(108, 99, 255, 0.08);
+    border-radius: 10px;
+    line-height: 1.4;
+    color: #f3f4f6;
+}
+
+#dailyPhrase div {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+#dailyPhrase small {
+    color: #aeb4c2;
+    font-size: 0.85rem;
+}

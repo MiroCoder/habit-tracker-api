@@ -401,6 +401,22 @@ async function loadDayStatus() {
     document.getElementById("dayStatus").textContent = await response.text();
 }
 
+async function loadDailyPhrase() {
+    const response = await fetch("/system/daily-phrase");
+    const data = await response.json();
+
+    const container = document.getElementById("dailyPhrase");
+
+    if (data.author) {
+            container.innerHTML = `
+                <div>${data.phrase}</div>
+                <small>— ${data.author}</small>
+            `;
+    } else {
+            container.textContent = data.phrase;
+    }
+  }
+
 async function refresh() {
     await Promise.all([
         loadHabits(),
@@ -409,9 +425,11 @@ async function refresh() {
         loadHistoryStats(),
         loadWeeklySummary(),
         loadDaysSince(),
-        loadDayStatus()
+        loadDayStatus(),
+        loadDailyPhrase()
     ]);
 }
+
 
 document.getElementById("daysSinceStartDate").max = new Date().toISOString().split("T")[0];
 document.getElementById("habitName").addEventListener("keydown", event => {
