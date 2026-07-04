@@ -5,6 +5,7 @@ import com.mirocoder.habittracker.repository.AppSettingsRepository;
 import com.mirocoder.habittracker.repository.DailyStatsRepository;
 import com.mirocoder.habittracker.repository.HabitCompletionRepository;
 import com.mirocoder.habittracker.repository.HabitRepository;
+import com.mirocoder.habittracker.repository.DailyPhraseRepository;
 
 import java.time.LocalDate;
 
@@ -39,6 +40,7 @@ class HabitServiceTest {
         HabitRepository habitRepository = mock(HabitRepository.class);
         AppSettingsRepository appSettingsRepository = mock(AppSettingsRepository.class);
         DailyStatsRepository dailyStatsRepository = mock(DailyStatsRepository.class);
+        DailyPhraseRepository dailyPhraseRepository = mock(DailyPhraseRepository.class);
 
         HabitCompletionRepository habitCompletionRepository = Mockito.mock(HabitCompletionRepository.class);
 
@@ -46,7 +48,8 @@ class HabitServiceTest {
                 habitRepository,
                 appSettingsRepository,
                 dailyStatsRepository,
-                habitCompletionRepository
+                habitCompletionRepository,
+                dailyPhraseRepository
         );
 
         LocalDate date = LocalDate.of(2026, 6, 1);

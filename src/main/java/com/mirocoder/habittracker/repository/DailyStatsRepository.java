@@ -1,5 +1,6 @@
 package com.mirocoder.habittracker.repository;
 
+import com.mirocoder.habittracker.model.DailyPhrase;
 import com.mirocoder.habittracker.model.DailyStats;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

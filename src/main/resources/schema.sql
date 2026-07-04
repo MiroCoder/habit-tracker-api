@@ -33,6 +33,12 @@ CREATE TABLE IF NOT EXISTS days_since (
     start_date DATE NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS daily_phrases (
+                                            id BIGSERIAL PRIMARY KEY,
+                                            phrase TEXT NOT NULL,
+                                            author VARCHAR(255)
+    );
+
 INSERT INTO daily_phrases (phrase, author)
 SELECT 'Some things are in our control and others not.', 'Epictetus'
     WHERE NOT EXISTS (
@@ -61,10 +67,6 @@ CREATE TABLE IF NOT EXISTS habit_completions (
                                                  CONSTRAINT uq_habit_completion_day UNIQUE (habit_id, completion_date)
     );
 
-CREATE TABLE IF NOT EXISTS daily_phrase (
-    id BIGSERIAL PRIMARY KEY,
-    phrase TEXT NOT NULL,
-    author VARCHAR(255)
-)
+
 
 ALTER TABLE habits ADD COLUMN IF NOT EXISTS required_today BOOLEAN DEFAULT FALSE;

@@ -5,18 +5,15 @@ import com.mirocoder.habittracker.dto.HabitRequest;
 import com.mirocoder.habittracker.dto.StatsSummaryResponse;
 import com.mirocoder.habittracker.model.Habit;
 import com.mirocoder.habittracker.model.HabitStats;
-import com.mirocoder.habittracker.repository.DailyStatsRepository;
-import com.mirocoder.habittracker.repository.HabitRepository;
+import com.mirocoder.habittracker.repository.*;
 import org.springframework.stereotype.Service;
 import com.mirocoder.habittracker.model.DailyStats;
 import com.mirocoder.habittracker.dto.HabitStreakResponse;
-
-import com.mirocoder.habittracker.repository.HabitCompletionRepository;
+import com.mirocoder.habittracker.model.DailyPhrase;
+import com.mirocoder.habittracker.repository.DailyPhraseRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import com.mirocoder.habittracker.repository.AppSettingsRepository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -28,13 +25,15 @@ public class HabitService {
     private final AppSettingsRepository appSettingsRepository;
     private final DailyStatsRepository dailyStatsRepository;
     private final HabitCompletionRepository habitCompletionRepository;
+    private final DailyPhraseRepository dailyPhraseRepository;
 
     public HabitService(HabitRepository habitRepository,
-                        AppSettingsRepository appSettingsRepository, DailyStatsRepository dailyStatsRepository, HabitCompletionRepository habitCompletionRepository) {
+                        AppSettingsRepository appSettingsRepository, DailyStatsRepository dailyStatsRepository, HabitCompletionRepository habitCompletionRepository, DailyPhraseRepository dailyPhraseRepository) {
         this.habitRepository = habitRepository;
         this.appSettingsRepository = appSettingsRepository;
         this.dailyStatsRepository = dailyStatsRepository;
         this.habitCompletionRepository = habitCompletionRepository;
+        this.dailyPhraseRepository = dailyPhraseRepository;
     }
 
 
@@ -73,7 +72,7 @@ public class HabitService {
     public Habit markAsNotCompleted(long id) {
         Habit habit = habitRepository.findById(id);
 
-        if(habit == null) {
+        if (habit == null) {
             return null;
         }
 
@@ -325,24 +324,19 @@ public class HabitService {
     }
 
     public DailyPhraseResponse getDailyPhrase() {
-        List<DailyPhraseResponse> phrases = List.of(
-                new DailyPhraseResponse(
-                        "The only way to do great work is to love what you do.",
-                        "Steve Jobs"
-                ),
-                new DailyPhraseResponse(
-                        "We are stubborn on vision. We are flexible on details.",
-                        "Jeff Bezos"
-                ),
-                new DailyPhraseResponse(
-                        "Don't be a know-it-all; be a learn-it-all.",
-                        "Satya Nadella"
-                )
+        DailyPhrase dailyPhrase = dailyPhraseRepository.findPhraseForToday();
+
+        if (dailyPhrase == null) {
+            return new DailyPhraseResponse(
+                    "Small effort counts.",
+                    "system"
+            );
+        }
+
+        return new DailyPhraseResponse(
+                dailyPhrase.getPhrase(),
+                dailyPhrase.getAuthor()
         );
-
-        int dayOfYear = LocalDate.now().getDayOfYear();
-        int index = (dayOfYear -1) % phrases.size();
-
-        return phrases.get(index);
     }
 }
+
