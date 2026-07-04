@@ -33,11 +33,38 @@ CREATE TABLE IF NOT EXISTS days_since (
     start_date DATE NOT NULL
 );
 
+INSERT INTO daily_phrases (phrase, author)
+SELECT 'Some things are in our control and others not.', 'Epictetus'
+    WHERE NOT EXISTS (
+    SELECT 1 FROM daily_phrases
+    WHERE phrase = 'Some things are in our control and others not.'
+);
+
+INSERT INTO daily_phrases (phrase, author)
+SELECT 'Waste no more time arguing what a good man should be. Be one.', 'Marcus Aurelius'
+    WHERE NOT EXISTS (
+    SELECT 1 FROM daily_phrases
+    WHERE phrase = 'Waste no more time arguing what a good man should be. Be one.'
+);
+
+INSERT INTO daily_phrases (phrase, author)
+SELECT 'Difficulties strengthen the mind, as labor does the body.', 'Seneca'
+    WHERE NOT EXISTS (
+    SELECT 1 FROM daily_phrases
+    WHERE phrase = 'Difficulties strengthen the mind, as labor does the body.'
+);
+
 CREATE TABLE IF NOT EXISTS habit_completions (
                                                  id BIGSERIAL PRIMARY KEY,
                                                  habit_id BIGINT NOT NULL,
                                                  completion_date DATE NOT NULL,
                                                  CONSTRAINT uq_habit_completion_day UNIQUE (habit_id, completion_date)
     );
+
+CREATE TABLE IF NOT EXISTS daily_phrase (
+    id BIGSERIAL PRIMARY KEY,
+    phrase TEXT NOT NULL,
+    author VARCHAR(255)
+)
 
 ALTER TABLE habits ADD COLUMN IF NOT EXISTS required_today BOOLEAN DEFAULT FALSE;
