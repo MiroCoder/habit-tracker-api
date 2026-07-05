@@ -36,4 +36,9 @@ public class DailyPhraseRepository {
 
         return phrases.get(index);
     }
+
+    public void save(DailyPhrase dailyPhrase) {
+        String sql = "INSERT INTO daily_phrases (phrase, author) VALUES (?,?)";
+        jdbcTemplate.update(sql,dailyPhrase.getPhrase(),dailyPhrase.getAuthor());
+    }
 }
