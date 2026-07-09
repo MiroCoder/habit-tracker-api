@@ -4,6 +4,9 @@ import com.mirocoder.habittracker.dto.DailyPhraseRequest;
 import com.mirocoder.habittracker.model.DailyPhrase;
 import com.mirocoder.habittracker.repository.DailyPhraseRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 @Service
 public class DailyPhraseService {
@@ -22,5 +25,9 @@ public class DailyPhraseService {
         );
 
         dailyPhraseRepository.save(dailyPhrase);
+    }
+
+    public List<DailyPhrase> getAllDailyPhrases() {
+        return dailyPhraseRepository.findAll();
     }
 }
