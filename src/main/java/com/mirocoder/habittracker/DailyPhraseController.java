@@ -15,7 +15,7 @@ public class DailyPhraseController {
 
     private final DailyPhraseService dailyPhraseService;
 
-    public DailyPhraseController(DailyPhraseService dailyPhraseService){
+    public DailyPhraseController(DailyPhraseService dailyPhraseService) {
         this.dailyPhraseService = dailyPhraseService;
     }
 
@@ -28,7 +28,19 @@ public class DailyPhraseController {
     }
 
     @GetMapping("/daily-phrases")
-    public List<DailyPhrase> getAllDailyPhrases(){
+    public List<DailyPhrase> getAllDailyPhrases() {
         return dailyPhraseService.getAllDailyPhrases();
     }
+
+    @DeleteMapping("/daily-phrases/{id}")
+    public ResponseEntity<Void> deleteDailyPhrase(@PathVariable long id) {
+        boolean deleted = dailyPhraseService.deleteById(id);
+
+        if (!deleted) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

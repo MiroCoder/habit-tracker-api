@@ -41,4 +41,10 @@ public class DailyPhraseRepository {
         String sql = "INSERT INTO daily_phrases (phrase, author) VALUES (?,?)";
         jdbcTemplate.update(sql,dailyPhrase.getPhrase(),dailyPhrase.getAuthor());
     }
+
+    public boolean deleteById(long id) {
+        String sql = "DELETE FROM daily_phrases WHERE id = ?";
+        int deleteRows = jdbcTemplate.update(sql, id);
+        return deleteRows > 0;
+    }
 }

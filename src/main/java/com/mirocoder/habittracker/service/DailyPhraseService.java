@@ -30,4 +30,8 @@ public class DailyPhraseService {
     public List<DailyPhrase> getAllDailyPhrases() {
         return dailyPhraseRepository.findAll();
     }
+
+    public boolean deleteById(long id) {
+        return dailyPhraseRepository.deleteById(id);
+    }
 }
