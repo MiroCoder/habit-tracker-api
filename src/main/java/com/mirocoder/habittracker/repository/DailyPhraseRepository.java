@@ -67,7 +67,7 @@ public class DailyPhraseRepository {
     }
 
     public boolean update(DailyPhrase dailyPhrase) {
-        String sql = " UPDATE daily_phrase SET phrase =?, author = ? WHERE id = ?";
+        String sql = " UPDATE daily_phrases SET phrase =?, author = ? WHERE id = ?";
         int updatedRows = jdbcTemplate.update(sql, dailyPhrase.getPhrase(), dailyPhrase.getAuthor(), dailyPhrase.getId());
 
         return updatedRows > 0;
