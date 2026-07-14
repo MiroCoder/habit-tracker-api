@@ -59,10 +59,17 @@ public class DailyPhraseRepository {
                 id
         );
 
-        if(phrases.isEmpty()) {
+        if (phrases.isEmpty()) {
             return null;
         }
 
         return phrases.get(0);
+    }
+
+    public boolean update(DailyPhrase dailyPhrase) {
+        String sql = " UPDATE daily_phrase SET phrase =?, author = ? WHERE id = ?";
+        int updatedRows = jdbcTemplate.update(sql, dailyPhrase.getPhrase(), dailyPhrase.getAuthor(), dailyPhrase.getId());
+
+        return updatedRows > 0;
     }
 }
