@@ -34,4 +34,19 @@ public class DailyPhraseService {
     public boolean deleteById(long id) {
         return dailyPhraseRepository.deleteById(id);
     }
+
+    public DailyPhrase updateDailyPhrase(long id, DailyPhraseRequest request) {
+        DailyPhrase dailyPhrase = dailyPhraseRepository.findById(id);
+
+        if(dailyPhrase == null) {
+            return null;
+        }
+
+        dailyPhrase.setPhrase(request.getPhrase());
+        dailyPhrase.setAuthor(request.getAuthor());
+
+        dailyPhraseRepository.update(dailyPhrase);
+
+        return dailyPhrase;
+    }
 }

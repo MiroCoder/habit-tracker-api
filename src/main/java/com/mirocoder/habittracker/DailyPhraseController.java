@@ -43,4 +43,19 @@ public class DailyPhraseController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/daily-phrases/{id}")
+    public ResponseEntity<DailyPhrase> updateDailyPhrase(
+            @PathVariable long id,
+            @Valid @RequestBody DailyPhraseRequest request
+    ) {
+        DailyPhrase updatedPhrase =
+                dailyPhraseService.updateDailyPhrase(id, request);
+
+        if (updatedPhrase == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(updatedPhrase);
+    }
+
 }
