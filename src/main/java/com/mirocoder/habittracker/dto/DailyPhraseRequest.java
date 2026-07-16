@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 public class DailyPhraseRequest {
     @NotBlank(message = "Phrase cannot be empty")
     private String phrase;
+    @NotBlank(message = "Author cannot be empty")
     private String author;
 
     public String getPhrase() {
