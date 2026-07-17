@@ -58,4 +58,15 @@ public class DailyPhraseController {
         return ResponseEntity.ok(updatedPhrase);
     }
 
+    @GetMapping("/daily-phrases{id}")
+    public ResponseEntity<DailyPhrase> getDailyPhraseById(@PathVariable long id) {
+        DailyPhrase phrase = dailyPhraseService.getDailyPhraseById(id);
+
+        if( phrase == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(phrase);
+    }
+
 }
