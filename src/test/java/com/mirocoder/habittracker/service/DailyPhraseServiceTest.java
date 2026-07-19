@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,5 +32,12 @@ public class DailyPhraseServiceTest {
 
         DailyPhrase result = service.getDailyPhraseById(1L);
         assertEquals(phrase, result);
+    }
+
+    @Test
+    void deleteByIdCallsRepository() {
+        service.deleteById(1L);
+
+        verify(repository).deleteById(1L);
     }
 }
