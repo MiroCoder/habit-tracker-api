@@ -1,9 +1,11 @@
 package com.mirocoder.habittracker.service;
 
+import com.mirocoder.habittracker.dto.DailyPhraseRequest;
 import com.mirocoder.habittracker.model.DailyPhrase;
 import com.mirocoder.habittracker.repository.DailyPhraseRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -39,5 +41,24 @@ public class DailyPhraseServiceTest {
         service.deleteById(1L);
 
         verify(repository).deleteById(1L);
+    }
+
+    @Test
+    void addDailyPhraseSavesCorrectData() {
+        DailyPhraseRequest request = new DailyPhraseRequest();
+        request.setPhrase("Discipline is the meaning");
+        request.setAuthor("Kembi");
+
+        service.addDailyPhrase(request);
+
+        ArgumentCaptor<DailyPhrase> captor = ArgumentCaptor.forClass(DailyPhrase.class);
+
+        verify(repository).save(captor.capture());
+
+        DailyPhrase savedPhrase = captor.getValue();
+
+        assertEquals(0, savedPhrase.getId());
+        assertEquals("Discipline is the meaning", savedPhrase.getPhrase());
+        assertEquals("Kembi", savedPhrase.getAuthor());
     }
 }
