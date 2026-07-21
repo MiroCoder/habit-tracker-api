@@ -8,6 +8,9 @@ async function loadDailyPhrasesAdmin() {
                                                        <div>
                                                            <strong>${phrase.phrase}</strong>
                                                            <div class="meta">${phrase.author}</div>
+                                                           <button type="button" onclick="deleteDailyPhraseAdmin(${phrase.id})">
+                                                               Delete
+                                                           </button>
                                                        </div>
                                                    </div>
                                                `).join("");
@@ -45,6 +48,23 @@ async function addDailyPhraseAdmin() {
     authorInput.value = "";
 
     await loadDailyPhrasesAdmin();
+}
+
+async function deleteDailyPhraseAdmin(id) {
+    const confirmed = confirm("Delete this phrase?")
+    if (!confirmed) return;
+
+    const response = await fetch(`/daily-phrases/${id}`, {
+                                         method: "DELETE"
+                                     });
+
+    if (!response.ok) {
+           alert("Failed to delete phrase");
+           return;
+    }
+
+    await loadDailyPhrasesAdmin();
+
 }
 
 loadDailyPhrasesAdmin();
