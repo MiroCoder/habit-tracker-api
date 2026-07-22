@@ -70,4 +70,16 @@ public class DailyPhraseController {
         return ResponseEntity.ok(phrase);
     }
 
+    @GetMapping("/daily-phrases/today")
+    public ResponseEntity<DailyPhrase> getPhraseForToday() {
+        DailyPhrase phrase = dailyPhraseService.getPhraseForToday();
+
+        if (phrase == null) {
+
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(phrase);
+    }
+
 }

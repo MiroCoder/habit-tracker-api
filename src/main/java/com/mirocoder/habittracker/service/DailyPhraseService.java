@@ -53,4 +53,8 @@ public class DailyPhraseService {
     public DailyPhrase getDailyPhraseById(long id) {
         return dailyPhraseRepository.findById(id);
     }
+
+    public DailyPhrase getPhraseForToday() {
+        return dailyPhraseRepository.findPhraseForToday();
+    }
 }
