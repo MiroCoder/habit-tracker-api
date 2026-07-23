@@ -32,7 +32,7 @@ public class DailyPhraseController {
         return dailyPhraseService.getAllDailyPhrases();
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+
     @DeleteMapping("/daily-phrases/{id}")
     public ResponseEntity<Void> deleteDailyPhrase(@PathVariable long id) {
         boolean deleted = dailyPhraseService.deleteById(id);
@@ -80,6 +80,11 @@ public class DailyPhraseController {
         }
 
         return ResponseEntity.ok(phrase);
+    }
+
+    @GetMapping("/daily-phrases/count")
+    public int getPhrasesAmount(){
+        return dailyPhraseService.getPhrasesAmount();
     }
 
 }
