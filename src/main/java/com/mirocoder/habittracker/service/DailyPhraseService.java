@@ -58,7 +58,7 @@ public class DailyPhraseService {
         return dailyPhraseRepository.findPhraseForToday();
     }
 
-    public int getPhrasesAmount() {
+    public long getPhrasesAmount() {
         return dailyPhraseRepository.countDailyPhrases();
     }
 }

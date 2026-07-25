@@ -83,7 +83,7 @@ public class DailyPhraseController {
     }
 
     @GetMapping("/daily-phrases/count")
-    public int getPhrasesAmount(){
+    public long getPhrasesAmount(){
         return dailyPhraseService.getPhrasesAmount();
     }
 

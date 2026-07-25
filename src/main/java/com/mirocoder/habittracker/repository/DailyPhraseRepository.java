@@ -73,7 +73,7 @@ public class DailyPhraseRepository {
         return updatedRows > 0;
     }
 
-    public int countDailyPhrases() {
+    public long countDailyPhrases() {
         String sql = "SELECT COUNT (*) FROM daily_phrases";
         return jdbcTemplate.queryForObject(sql, Integer.class);
 
