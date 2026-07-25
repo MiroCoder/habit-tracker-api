@@ -75,7 +75,7 @@ public class DailyPhraseRepository {
 
     public long countDailyPhrases() {
         String sql = "SELECT COUNT (*) FROM daily_phrases";
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+        return jdbcTemplate.queryForObject(sql, Long.class);
 
     }
 }
