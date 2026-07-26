@@ -61,4 +61,8 @@ public class DailyPhraseService {
     public long getPhrasesAmount() {
         return dailyPhraseRepository.countDailyPhrases();
     }
+
+    public List<DailyPhrase> getPhrasesByAuthor(String author) {
+        return dailyPhraseRepository.findByAuthor(author);
+    }
 }

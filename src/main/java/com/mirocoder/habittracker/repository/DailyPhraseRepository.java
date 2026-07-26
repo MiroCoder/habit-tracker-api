@@ -76,6 +76,18 @@ public class DailyPhraseRepository {
     public long countDailyPhrases() {
         String sql = "SELECT COUNT (*) FROM daily_phrases";
         return jdbcTemplate.queryForObject(sql, Long.class);
+    }
 
+    public List<DailyPhrase> findByAuthor(String author) {
+        String sql = "SELECT * FROM daily_phrases WHERE LOWER(author) = LOWER(?)";
+        List <DailyPhrase> phrases = jdbcTemplate.query(sql,
+                (rs, rowNum) -> new DailyPhrase(
+                        rs.getLong("id"),
+                        rs.getString("phrase"),
+                        rs.getString("author")
+                ), author
+        );
+
+        return  phrases;
     }
 }

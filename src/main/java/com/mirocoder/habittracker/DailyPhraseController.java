@@ -87,4 +87,11 @@ public class DailyPhraseController {
         return dailyPhraseService.getPhrasesAmount();
     }
 
+    @GetMapping("/daily-phrases/search")
+    public ResponseEntity<List<DailyPhrase>> getPhrasesByAuthor(@RequestParam String author) {
+        List<DailyPhrase> phrases = dailyPhraseService.getPhrasesByAuthor(author);
+
+        return ResponseEntity.ok(phrases);
+    }
+
 }
