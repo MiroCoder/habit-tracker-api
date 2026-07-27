@@ -32,7 +32,16 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(response);
 
+    }
+
+    @ExceptionHandler(DuplicateDailyPhraseException.class)
+    public ResponseEntity<String> handleDuplicateError(
+        DuplicateDailyPhraseException ex
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ex.getMessage());
     }
 }

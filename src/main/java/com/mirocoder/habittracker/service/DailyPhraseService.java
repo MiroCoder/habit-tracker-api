@@ -1,6 +1,7 @@
 package com.mirocoder.habittracker.service;
 
 import com.mirocoder.habittracker.dto.DailyPhraseRequest;
+import com.mirocoder.habittracker.exception.DuplicateDailyPhraseException;
 import com.mirocoder.habittracker.model.DailyPhrase;
 import com.mirocoder.habittracker.repository.DailyPhraseRepository;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,15 @@ public class DailyPhraseService {
     }
 
     public void addDailyPhrase(DailyPhraseRequest request) {
+
+        if (dailyPhraseRepository.existsByPhraseAndAuthor(
+                request.getPhrase(),
+                request.getAuthor()
+        )){
+            throw new DuplicateDailyPhraseException(
+              "Daily phrase already exists"
+            );
+        }
         DailyPhrase dailyPhrase = new DailyPhrase(
                 0,
                 request.getPhrase(),

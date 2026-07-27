@@ -90,4 +90,14 @@ public class DailyPhraseRepository {
 
         return  phrases;
     }
+
+    public boolean existsByPhraseAndAuthor(String phrase, String author) {
+        String sql = "SELECT COUNT (*) FROM daily_phrases " +
+                "WHERE LOWER(phrase) = LOWER(?) " +
+                "AND LOWER(author) = LOWER(?)";
+
+        long count = jdbcTemplate.queryForObject(sql, Long.class, phrase, author);
+
+        return count > 0;
+    }
 }
