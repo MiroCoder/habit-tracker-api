@@ -16,6 +16,15 @@ async function loadDailyPhrasesAdmin() {
                                                `).join("");
 }
 
+async function loadDailyPhraseCount() {
+    const response = await fetch("/daily-phrases/count");
+    const count = await response.json();
+
+    const adminPhraseCount = document.getElementById("adminPhraseCount");
+
+    adminPhraseCount.textContent = count;
+}
+
 async function addDailyPhraseAdmin() {
     const phraseInput = document.getElementById("adminPhrase");
     const authorInput = document.getElementById("adminAuthor");
@@ -48,6 +57,7 @@ async function addDailyPhraseAdmin() {
     authorInput.value = "";
 
     await loadDailyPhrasesAdmin();
+    loadDailyPhraseCount();
 }
 
 async function deleteDailyPhraseAdmin(id) {
@@ -64,8 +74,11 @@ async function deleteDailyPhraseAdmin(id) {
     }
 
     await loadDailyPhrasesAdmin();
+    loadDailyPhraseCount()
 
 }
 
-loadDailyPhrasesAdmin();
 
+
+loadDailyPhrasesAdmin();
+loadDailyPhraseCount();
