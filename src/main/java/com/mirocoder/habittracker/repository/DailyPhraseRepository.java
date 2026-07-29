@@ -100,4 +100,10 @@ public class DailyPhraseRepository {
 
         return count > 0;
     }
+
+    public List<String> findAllAuthors() {
+        String sql = "SELECT DISTINCT author FROM daily_phrases ORDER BY author";
+
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
 }

@@ -94,4 +94,10 @@ public class DailyPhraseController {
         return ResponseEntity.ok(phrases);
     }
 
+    @GetMapping("/daily-phrases/authors")
+    public List<String> getAllAuthors() {
+
+        return dailyPhraseService.getAllAuthors();
+    }
+
 }

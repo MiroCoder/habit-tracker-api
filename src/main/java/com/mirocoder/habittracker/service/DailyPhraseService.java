@@ -75,4 +75,8 @@ public class DailyPhraseService {
     public List<DailyPhrase> getPhrasesByAuthor(String author) {
         return dailyPhraseRepository.findByAuthor(author);
     }
+
+    public List<String> getAllAuthors() {
+        return dailyPhraseRepository.findAllAuthors();
+    }
 }
