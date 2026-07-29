@@ -8,6 +8,11 @@ async function loadDailyPhrasesAdmin() {
                                                        <div>
                                                            <strong>${phrase.phrase}</strong>
                                                            <div class="meta">${phrase.author}</div>
+
+                                                           <button type="button" onclick="editDailyPhraseAdmin(${phrase.id})">
+                                                           Edit
+                                                           </button>
+
                                                            <button type="button" onclick="deleteDailyPhraseAdmin(${phrase.id})">
                                                                Delete
                                                            </button>
@@ -58,6 +63,34 @@ async function addDailyPhraseAdmin() {
 
     await loadDailyPhrasesAdmin();
     loadDailyPhraseCount();
+}
+
+async function editDailyPhraseAdmin(id) {
+    const response = await fetch(`/daily-phrases/${id}`);
+    const phrase = await response.json();
+
+    const newPhrase = prompt("Edit phrase:", phrase.phrase);
+    const newAuthor = prompt("Edit author:", phrase.author);
+
+    if (newPhrase === null || newAuthor === null) return;
+
+    const updateResponse =  await fetch(`/daily-phrases/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+          phrase: newPhrase.trim(),
+          author: newAuthor.trim()
+          })
+    });
+
+    if (!updateResponse.ok) {
+        alert("Failed to update phrase");
+        return;
+    }
+
+    await loadDailyPhrasesAdmin();
 }
 
 async function deleteDailyPhraseAdmin(id) {
