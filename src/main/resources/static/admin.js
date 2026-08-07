@@ -111,7 +111,19 @@ async function deleteDailyPhraseAdmin(id) {
 
 }
 
+async function loadAuthorFilter() {
+    const response = await fetch("/daily-phrases/authors");
+    const authors = await response.json();
+    const select = document.getElementById("authorFilter");
+
+    select.innerHTML += authors
+        .map(author => `<option value="${author}">${author}</option>`)
+        .join("");
+
+}
+
 
 
 loadDailyPhrasesAdmin();
 loadDailyPhraseCount();
+loadAuthorFilter();
