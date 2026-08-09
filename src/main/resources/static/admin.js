@@ -122,7 +122,42 @@ async function loadAuthorFilter() {
 
 }
 
+async function filterPhrasesByAuthor() {
+    const select = document.getElementById("authorFilter");
+    const author = select.value;
 
+    let url;
+
+    if (author === "") {
+        url = "/daily-phrases";
+    } else {
+        url = "/daily-phrases/search?author=" + encodeURIComponent(author);
+    }
+
+    const response = await fetch(url);
+    const phrases = await response.json();
+
+    const container = document.getElementById("adminDailyPhrases");
+
+    container.innerHTML = phrases.map(phrase => `
+        <div class="habit">
+            <div>
+                <strong>${phrase.phrase}</strong>
+                <div class="meta">${phrase.author}</div>
+
+                <button type="button"
+                        onclick="editDailyPhraseAdmin(${phrase.id})">
+                    Edit
+                </button>
+
+                <button type="button"
+                        onclick="deleteDailyPhraseAdmin(${phrase.id})">
+                    Delete
+                </button>
+            </div>
+        </div>
+    `).join("");
+}
 
 loadDailyPhrasesAdmin();
 loadDailyPhraseCount();

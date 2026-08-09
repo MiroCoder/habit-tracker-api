@@ -20,7 +20,8 @@ public class DailyPhraseRepository {
         return jdbcTemplate.query(sql, (rs, rowNum) -> new DailyPhrase(
                 rs.getLong("id"),
                 rs.getString("phrase"),
-                rs.getString("author")
+                rs.getString("author"),
+                rs.getBoolean("active")
         ));
     }
 
@@ -54,7 +55,8 @@ public class DailyPhraseRepository {
                 (rs, rowNum) -> new DailyPhrase(
                         rs.getLong("id"),
                         rs.getString("phrase"),
-                        rs.getString("author")
+                        rs.getString("author"),
+                        rs.getBoolean("active")
                 ),
                 id
         );
@@ -84,7 +86,8 @@ public class DailyPhraseRepository {
                 (rs, rowNum) -> new DailyPhrase(
                         rs.getLong("id"),
                         rs.getString("phrase"),
-                        rs.getString("author")
+                        rs.getString("author"),
+                        rs.getBoolean("active")
                 ), author
         );
 

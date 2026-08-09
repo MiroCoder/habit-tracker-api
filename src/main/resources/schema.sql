@@ -36,7 +36,8 @@ CREATE TABLE IF NOT EXISTS days_since (
 CREATE TABLE IF NOT EXISTS daily_phrases (
                                             id BIGSERIAL PRIMARY KEY,
                                             phrase TEXT NOT NULL,
-                                            author VARCHAR(255)
+                                            author VARCHAR(255),
+                                            active BOOLEAN NOT NULL DEFAULT TRUE
     );
 
 INSERT INTO daily_phrases (phrase, author)
@@ -70,3 +71,6 @@ CREATE TABLE IF NOT EXISTS habit_completions (
 
 
 ALTER TABLE habits ADD COLUMN IF NOT EXISTS required_today BOOLEAN DEFAULT FALSE;
+
+ALERT TABLE daily_phrases;
+ADD COLUMN IF NOT EXISTS active BOOLEAN NOT NULL DEFAULT TRUE;
