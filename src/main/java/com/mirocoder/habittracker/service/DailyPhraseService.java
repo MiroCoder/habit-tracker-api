@@ -31,7 +31,8 @@ public class DailyPhraseService {
         DailyPhrase dailyPhrase = new DailyPhrase(
                 0,
                 request.getPhrase(),
-                request.getAuthor()
+                request.getAuthor(),
+                true
         );
 
         dailyPhraseRepository.save(dailyPhrase);
@@ -78,5 +79,9 @@ public class DailyPhraseService {
 
     public List<String> getAllAuthors() {
         return dailyPhraseRepository.findAllAuthors();
+    }
+
+    public boolean updateActiveStatus(long id, boolean active) {
+        return dailyPhraseRepository.updateActiveStatus(id, active);
     }
 }

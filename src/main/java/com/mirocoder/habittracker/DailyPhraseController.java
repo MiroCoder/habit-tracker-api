@@ -1,5 +1,6 @@
 package com.mirocoder.habittracker;
 
+import com.mirocoder.habittracker.dto.DailyPhraseActiveRequest;
 import com.mirocoder.habittracker.dto.DailyPhraseRequest;
 import com.mirocoder.habittracker.model.DailyPhrase;
 import com.mirocoder.habittracker.service.DailyPhraseService;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.ResponseEntity.notFound;
 
 @RestController
 public class DailyPhraseController {
@@ -38,7 +41,7 @@ public class DailyPhraseController {
         boolean deleted = dailyPhraseService.deleteById(id);
 
         if (!deleted) {
-            return ResponseEntity.notFound().build();
+            return notFound().build();
         }
 
         return ResponseEntity.noContent().build();
@@ -53,7 +56,7 @@ public class DailyPhraseController {
                 dailyPhraseService.updateDailyPhrase(id, request);
 
         if (updatedPhrase == null) {
-            return ResponseEntity.notFound().build();
+            return notFound().build();
         }
 
         return ResponseEntity.ok(updatedPhrase);
@@ -64,7 +67,7 @@ public class DailyPhraseController {
         DailyPhrase phrase = dailyPhraseService.getDailyPhraseById(id);
 
         if( phrase == null) {
-            return ResponseEntity.notFound().build();
+            return notFound().build();
         }
 
         return ResponseEntity.ok(phrase);
@@ -76,7 +79,7 @@ public class DailyPhraseController {
 
         if (phrase == null) {
 
-            return ResponseEntity.notFound().build();
+            return notFound().build();
         }
 
         return ResponseEntity.ok(phrase);
@@ -98,6 +101,21 @@ public class DailyPhraseController {
     public List<String> getAllAuthors() {
 
         return dailyPhraseService.getAllAuthors();
+    }
+
+    @PatchMapping("/daily-phrases/{id}/active")
+    public ResponseEntity<Void> updateActiveStatus(
+            @PathVariable long id,
+            @Valid @RequestBody DailyPhraseActiveRequest request
+    ) {
+        boolean updated = dailyPhraseService.updateActiveStatus(
+                id,
+                request.getActive()
+        );
+
+        if (!updated) { return ResponseEntity.notFound().build();} else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
 }

@@ -26,7 +26,8 @@ public class DailyPhraseRepository {
     }
 
     public DailyPhrase findPhraseForToday() {
-        List<DailyPhrase> phrases = findAll();
+//        List<DailyPhrase> phrases = findAll();
+        List<DailyPhrase> phrases= findActivePhrases();
 
         if (phrases.isEmpty()) {
             return null;
@@ -36,6 +37,16 @@ public class DailyPhraseRepository {
         int index = (dayOfYear - 1) % phrases.size();
 
         return phrases.get(index);
+    }
+
+    public List<DailyPhrase> findActivePhrases() {
+        String sql = "SELECT * FROM daily_phrases WHERE active = TRUE ORDER BY id";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new DailyPhrase(
+                rs.getLong("id"),
+                rs.getString("phrase"),
+                rs.getString("author"),
+                rs.getBoolean("active")
+        ));
     }
 
     public void save(DailyPhrase dailyPhrase) {
@@ -108,5 +119,16 @@ public class DailyPhraseRepository {
         String sql = "SELECT DISTINCT author FROM daily_phrases WHERE author IS NOT NULL AND TRUM(author) <> '' ORDER BY author";
 
         return jdbcTemplate.queryForList(sql, String.class);
+    }
+
+    public boolean updateActiveStatus(long id, boolean active){
+        String sql = "UPDATE daily_phrases SET active = ? WHERE id = ?";
+        int rows = jdbcTemplate.update(sql, active,id);
+
+        if (rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
