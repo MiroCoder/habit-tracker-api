@@ -116,7 +116,7 @@ public class DailyPhraseRepository {
     }
 
     public List<String> findAllAuthors() {
-        String sql = "SELECT DISTINCT author FROM daily_phrases WHERE author IS NOT NULL AND TRUM(author) <> '' ORDER BY author";
+        String sql = "SELECT DISTINCT author FROM daily_phrases WHERE author IS NOT NULL AND TRIM(author) <> '' ORDER BY author";
 
         return jdbcTemplate.queryForList(sql, String.class);
     }
