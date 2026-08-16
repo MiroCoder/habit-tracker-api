@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Habit Tracker Admin</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -22,8 +23,8 @@
     <p>Total phrases: <strong id="adminPhraseCount">...</strong></p>
 
     <div class="add-form">
-      <input id="adminPhrase" type="text" placeholder="Phrase">
-      <input id="adminAuthor" type="text" placeholder="Author">
+      <input id="adminPhrase" type="text" placeholder="Phrase" aria-label="Phrase">
+      <input id="adminAuthor" type="text" placeholder="Author" aria-label="Author">
 
       <button type="button" onclick="addDailyPhraseAdmin()">
         Add phrase
@@ -32,8 +33,8 @@
 
     </div>
 
-    <select id="authorFilter" onchange="filterPhrasesByAuthor()">
-      <option value ="">All authors</option>
+    <select id="authorFilter" aria-label="Filter by author" onchange="filterPhrasesByAuthor()">
+      <option value="">All authors</option>
     </select>
 
     <div id="adminDailyPhrases" class="list">

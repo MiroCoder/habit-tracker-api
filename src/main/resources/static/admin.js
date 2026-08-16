@@ -1,39 +1,100 @@
-async function loadDailyPhrasesAdmin() {
-    const response = await fetch("/daily-phrases");
-    const phrases =await response.json();
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+async function request(url, options) {
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+        const message = (await response.text()).trim();
+        throw new Error(message || `Request failed with status ${response.status}`);
+    }
+
+    if (response.status === 204) {
+        return null;
+    }
+
+    return response.json();
+}
+
+function renderDailyPhrases(phrases) {
     const container = document.getElementById("adminDailyPhrases");
 
-    container.innerHTML = phrases.map(phrase =>`
-                                                   <div class="habit">
-                                                       <div>
-                                                           <strong>${phrase.phrase}</strong>
-                                                           <div class="meta">${phrase.author}</div>
+    if (phrases.length === 0) {
+        container.innerHTML = '<p class="empty-state">No phrases found.</p>';
+        return;
+    }
 
-                                                           <button type="button" onclick="editDailyPhraseAdmin(${phrase.id})">
-                                                           Edit
-                                                           </button>
+    container.innerHTML = phrases.map(phrase => {
+        const id = Number(phrase.id);
+        const nextActive = !phrase.active;
 
-                                                           <button type="button" onclick="deleteDailyPhraseAdmin(${phrase.id})">
-                                                               Delete
-                                                           </button>
-                                                       </div>
-                                                   </div>
-                                               `).join("");
+        return `
+            <div class="habit${phrase.active ? "" : " inactive"}">
+                <div class="phrase-copy">
+                    <strong>${escapeHtml(phrase.phrase)}</strong>
+                    <div class="meta">${escapeHtml(phrase.author)}</div>
+                    <span class="status-badge ${phrase.active ? "status-active" : "status-inactive"}">
+                        ${phrase.active ? "Active" : "Inactive"}
+                    </span>
+                </div>
+                <div class="actions">
+                    <button type="button" class="button-secondary"
+                            onclick="setDailyPhraseActive(${id}, ${nextActive})">
+                        ${phrase.active ? "Disable" : "Enable"}
+                    </button>
+                    <button type="button" onclick="editDailyPhraseAdmin(${id})">Edit</button>
+                    <button type="button" class="button-danger"
+                            onclick="deleteDailyPhraseAdmin(${id})">Delete</button>
+                </div>
+            </div>
+        `;
+    }).join("");
+}
+
+async function loadDailyPhrasesAdmin() {
+    const author = document.getElementById("authorFilter").value;
+    const url = author
+        ? `/daily-phrases/search?author=${encodeURIComponent(author)}`
+        : "/daily-phrases";
+
+    renderDailyPhrases(await request(url));
 }
 
 async function loadDailyPhraseCount() {
-    const response = await fetch("/daily-phrases/count");
-    const count = await response.json();
+    const count = await request("/daily-phrases/count");
+    document.getElementById("adminPhraseCount").textContent = count;
+}
 
-    const adminPhraseCount = document.getElementById("adminPhraseCount");
+async function loadAuthorFilter() {
+    const select = document.getElementById("authorFilter");
+    const selectedAuthor = select.value;
+    const authors = await request("/daily-phrases/authors");
 
-    adminPhraseCount.textContent = count;
+    select.replaceChildren(new Option("All authors", ""));
+    authors.forEach(author => select.add(new Option(author, author)));
+
+    if (authors.includes(selectedAuthor)) {
+        select.value = selectedAuthor;
+    }
+}
+
+async function refreshAdmin() {
+    await loadAuthorFilter();
+    await Promise.all([
+        loadDailyPhrasesAdmin(),
+        loadDailyPhraseCount()
+    ]);
 }
 
 async function addDailyPhraseAdmin() {
     const phraseInput = document.getElementById("adminPhrase");
     const authorInput = document.getElementById("adminAuthor");
-
     const phrase = phraseInput.value.trim();
     const author = authorInput.value.trim();
 
@@ -42,123 +103,97 @@ async function addDailyPhraseAdmin() {
         return;
     }
 
-    const response = await fetch("/daily-phrases", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            phrase: phrase,
-            author: author
-        })
-    });
-
-    if (!response.ok) {
-        alert("Failed to add phrase");
+    if (!author) {
+        authorInput.focus();
         return;
     }
 
-    phraseInput.value = "";
-    authorInput.value = "";
+    try {
+        await request("/daily-phrases", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({phrase, author})
+        });
 
-    await loadDailyPhrasesAdmin();
-    loadDailyPhraseCount();
+        phraseInput.value = "";
+        authorInput.value = "";
+        await refreshAdmin();
+    } catch (error) {
+        alert(`Failed to add phrase: ${error.message}`);
+    }
 }
 
 async function editDailyPhraseAdmin(id) {
-    const response = await fetch(`/daily-phrases/${id}`);
-    const phrase = await response.json();
+    try {
+        const phrase = await request(`/daily-phrases/${id}`);
+        const newPhrase = prompt("Edit phrase:", phrase.phrase);
 
-    const newPhrase = prompt("Edit phrase:", phrase.phrase);
-    const newAuthor = prompt("Edit author:", phrase.author);
+        if (newPhrase === null) {
+            return;
+        }
 
-    if (newPhrase === null || newAuthor === null) return;
+        const newAuthor = prompt("Edit author:", phrase.author);
 
-    const updateResponse =  await fetch(`/daily-phrases/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-          phrase: newPhrase.trim(),
-          author: newAuthor.trim()
-          })
-    });
+        if (newAuthor === null) {
+            return;
+        }
 
-    if (!updateResponse.ok) {
-        alert("Failed to update phrase");
-        return;
+        if (!newPhrase.trim() || !newAuthor.trim()) {
+            alert("Phrase and author are required.");
+            return;
+        }
+
+        await request(`/daily-phrases/${id}`, {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                phrase: newPhrase.trim(),
+                author: newAuthor.trim()
+            })
+        });
+
+        await refreshAdmin();
+    } catch (error) {
+        alert(`Failed to update phrase: ${error.message}`);
     }
-
-    await loadDailyPhrasesAdmin();
 }
 
 async function deleteDailyPhraseAdmin(id) {
-    const confirmed = confirm("Delete this phrase?")
-    if (!confirmed) return;
-
-    const response = await fetch(`/daily-phrases/${id}`, {
-                                         method: "DELETE"
-                                     });
-
-    if (!response.ok) {
-           alert("Failed to delete phrase");
-           return;
+    if (!confirm("Delete this phrase?")) {
+        return;
     }
 
-    await loadDailyPhrasesAdmin();
-    loadDailyPhraseCount()
-
+    try {
+        await request(`/daily-phrases/${id}`, {method: "DELETE"});
+        await refreshAdmin();
+    } catch (error) {
+        alert(`Failed to delete phrase: ${error.message}`);
+    }
 }
 
-async function loadAuthorFilter() {
-    const response = await fetch("/daily-phrases/authors");
-    const authors = await response.json();
-    const select = document.getElementById("authorFilter");
+async function setDailyPhraseActive(id, active) {
+    try {
+        await request(`/daily-phrases/${id}/active`, {
+            method: "PATCH",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({active})
+        });
 
-    select.innerHTML += authors
-        .map(author => `<option value="${author}">${author}</option>`)
-        .join("");
-
+        await loadDailyPhrasesAdmin();
+    } catch (error) {
+        alert(`Failed to change phrase status: ${error.message}`);
+    }
 }
 
 async function filterPhrasesByAuthor() {
-    const select = document.getElementById("authorFilter");
-    const author = select.value;
-
-    let url;
-
-    if (author === "") {
-        url = "/daily-phrases";
-    } else {
-        url = "/daily-phrases/search?author=" + encodeURIComponent(author);
+    try {
+        await loadDailyPhrasesAdmin();
+    } catch (error) {
+        alert(`Failed to filter phrases: ${error.message}`);
     }
-
-    const response = await fetch(url);
-    const phrases = await response.json();
-
-    const container = document.getElementById("adminDailyPhrases");
-
-    container.innerHTML = phrases.map(phrase => `
-        <div class="habit">
-            <div>
-                <strong>${phrase.phrase}</strong>
-                <div class="meta">${phrase.author}</div>
-
-                <button type="button"
-                        onclick="editDailyPhraseAdmin(${phrase.id})">
-                    Edit
-                </button>
-
-                <button type="button"
-                        onclick="deleteDailyPhraseAdmin(${phrase.id})">
-                    Delete
-                </button>
-            </div>
-        </div>
-    `).join("");
 }
 
-loadDailyPhrasesAdmin();
-loadDailyPhraseCount();
-loadAuthorFilter();
+refreshAdmin().catch(error => {
+    document.getElementById("adminDailyPhrases").innerHTML =
+        `<p class="empty-state">Failed to load phrases: ${escapeHtml(error.message)}</p>`;
+});

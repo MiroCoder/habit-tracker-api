@@ -138,7 +138,7 @@ public class HabitController {
     }
 
     @GetMapping("/habits/search")
-    public ResponseEntity<Habit> seaarchHabit(@RequestParam String name) {
+    public ResponseEntity<Habit> searchHabit(@RequestParam String name) {
         Habit habit = habitService.findByName(name);
 
         if (habit == null) {
@@ -166,7 +166,7 @@ public class HabitController {
     @PatchMapping("/stats/history/{date}")
     public DailyStats updateDailyStats(
             @PathVariable LocalDate date,
-            @RequestBody DailyStatsUpdateRequest request
+            @Valid @RequestBody DailyStatsUpdateRequest request
     ) {
         return habitService.updateDailyStats(
                 date,
@@ -187,7 +187,7 @@ public class HabitController {
         return habitService.getNextHabit();
     }
 
-    @GetMapping("system/time")
+    @GetMapping("/system/time")
     public Map<String, Object> getTime() {
         return Map.of(
                 "currentMillis", System.currentTimeMillis(),

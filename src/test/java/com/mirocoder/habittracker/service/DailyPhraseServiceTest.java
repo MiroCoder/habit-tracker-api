@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.context.transaction.TestTransaction.isActive;
 
 @ExtendWith(MockitoExtension.class)
 public class DailyPhraseServiceTest {
@@ -63,5 +62,15 @@ public class DailyPhraseServiceTest {
         assertEquals("Discipline is the meaning", savedPhrase.getPhrase());
         assertEquals("Kembi", savedPhrase.getAuthor());
         assertTrue(savedPhrase.isActive());
+    }
+
+    @Test
+    void updateActiveStatusReturnsRepositoryResult() {
+        when(repository.updateActiveStatus(1L, false)).thenReturn(true);
+
+        boolean result = service.updateActiveStatus(1L, false);
+
+        assertTrue(result);
+        verify(repository).updateActiveStatus(1L, false);
     }
 }

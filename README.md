@@ -2,7 +2,7 @@
 
 Full-stack habit tracking application built with Spring Boot, PostgreSQL, and vanilla JavaScript.
 
-The application tracks daily habit completion, streaks, weekly statistics, historical day records, and counters for time since a selected event.
+The application tracks daily habit completion, streaks, weekly statistics, historical day records, counters for time since a selected event, and a rotating daily phrase.
 
 ## Screenshots
 
@@ -24,6 +24,8 @@ The application tracks daily habit completion, streaks, weekly statistics, histo
 - Store daily statistics and display seven-day summaries
 - Browse historical records by day
 - Track days since an event and reset its start date
+- Rotate through active daily phrases and manage them from an admin page
+- Filter phrases by author and enable or disable them without deleting data
 - Automatically reset daily habit completion
 - Responsive dark web interface
 
@@ -61,6 +63,8 @@ spring.datasource.username=postgres
 spring.datasource.password=postgres
 ```
 
+For another environment, set `DB_URL`, `DB_USERNAME`, and `DB_PASSWORD` instead of editing the file.
+
 Tables are created automatically from `schema.sql`.
 
 ### Start
@@ -78,6 +82,8 @@ Linux or macOS:
 ```
 
 Open [http://localhost:8081](http://localhost:8081).
+
+The daily phrase admin page is available at [http://localhost:8081/admin.html](http://localhost:8081/admin.html).
 
 ## API
 
@@ -120,19 +126,34 @@ Open [http://localhost:8081](http://localhost:8081).
 | `PATCH` | `/days-since/{id}/start-date` | Change the start date |
 | `DELETE` | `/days-since/{id}` | Delete a counter |
 
+### Daily Phrases
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/daily-phrases` | List all phrases |
+| `POST` | `/daily-phrases` | Create an active phrase |
+| `GET` | `/daily-phrases/today` | Get today's active phrase |
+| `GET` | `/daily-phrases/{id}` | Get a phrase |
+| `PUT` | `/daily-phrases/{id}` | Update a phrase |
+| `PATCH` | `/daily-phrases/{id}/active` | Enable or disable a phrase |
+| `DELETE` | `/daily-phrases/{id}` | Delete a phrase |
+| `GET` | `/daily-phrases/search?author={author}` | Filter by author |
+| `GET` | `/daily-phrases/authors` | List available authors |
+| `GET` | `/daily-phrases/count` | Count phrases |
+
 ## Tests
 
 ```powershell
 .\mvnw.cmd test
 ```
 
-The test suite covers application startup and habit service behavior.
+The test suite covers application startup, habit calculations, and daily phrase behavior. Tests use an isolated in-memory database, so running them does not modify local PostgreSQL data.
 
 ## Project Structure
 
 ```text
 src/main/java/.../
-├── controller endpoints
+├── REST controller endpoints
 ├── dto request and response models
 ├── model domain objects
 ├── repository JDBC data access

@@ -1,9 +1,11 @@
 @echo off
-cd /d C:\Users\Mirek.MiroslavPK\IdeaProjects\habit-tracker-api
+cd /d "%~dp0"
 
-echo Stopping old app on port 8081...
-for /f "tokens=5" %%a in ('netstat -ano ^| findstr :8081') do (
-taskkill /PID %%a /F >nul 2>&1
+netstat -ano | findstr /R /C:":8081 .*LISTENING" >nul
+if not errorlevel 1 (
+echo Port 8081 is already in use. Stop the existing process and try again.
+pause
+exit /b 1
 )
 
 echo Building fresh version...

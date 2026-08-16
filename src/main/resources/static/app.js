@@ -66,7 +66,7 @@ async function loadHabits() {
                 <div class="actions">
                     <button type="button" onclick="completeHabit(${habit.id})" ${habit.completed ? "disabled" : ""}>Done</button>
                     <button type="button" class="button-secondary" onclick="uncompleteHabit(${habit.id})" ${habit.completed ? "" : "disabled"}>Undo</button>
-                    <button onclick="startEditHabit(${habit.id})">Edit</button>
+                    <button type="button" onclick="startEditHabit(${habit.id})">Edit</button>
                     <button type="button" class="button-danger" onclick="deleteHabit(${habit.id})">Delete</button>
                 </div>
             </div>
@@ -197,8 +197,6 @@ async function saveEditHabit() {
         priority: priority,
         requiredToday: requiredToday
     };
-
-    console.log("EDIT BODY:", habitBody);
 
     const response = await fetch(`/habits/${editingHabitId}`, {
         method: "PUT",
@@ -409,8 +407,8 @@ async function loadDailyPhrase() {
 
     if (data.author) {
             container.innerHTML = `
-                <div>${data.phrase}</div>
-                <small>— ${data.author}</small>
+                <div>${escapeHtml(data.phrase)}</div>
+                <small>— ${escapeHtml(data.author)}</small>
             `;
     } else {
             container.textContent = data.phrase;

@@ -3,7 +3,6 @@ package com.mirocoder.habittracker.dto;
 import com.mirocoder.habittracker.model.Habit;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.NotBlank;
 
 public class HabitRequest {
 
@@ -11,7 +10,7 @@ public class HabitRequest {
     private String name;
 
     private boolean completed;
-    private boolean required_today;
+    private boolean requiredToday;
 
     @NotNull(message = "Priority is required")
     private Habit.Priority priority;
@@ -41,10 +40,10 @@ public class HabitRequest {
     }
 
     public boolean isRequiredToday() {
-        return required_today;
+        return requiredToday;
     }
 
-    public void setRequiredToday(boolean required_today) {
-        this.required_today = required_today;
+    public void setRequiredToday(boolean requiredToday) {
+        this.requiredToday = requiredToday;
     }
 }

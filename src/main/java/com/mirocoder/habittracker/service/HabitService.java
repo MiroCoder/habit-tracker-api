@@ -114,11 +114,7 @@ public class HabitService {
     }
 
     public HabitStats getStats() {
-        List<Habit> habits = habitRepository.findAll();
-
-//        int completed = calculateCompletion(habits);
         int completed = habitRepository.countCompleted();
-//        int total = habits.size();
         int total = habitRepository.countAll();
         int notCompleted = total - completed;
         double percent = total == 0 ? 0 : dayPercent(total, completed);
@@ -237,6 +233,10 @@ public class HabitService {
     }
 
     public StatsSummaryResponse getStatsSummary(int days) {
+        if (days < 1) {
+            throw new IllegalArgumentException("Days must be at least 1");
+        }
+
         List<DailyStats> history = dailyStatsRepository.findLastDays(days);
 
         if (history.isEmpty()) {

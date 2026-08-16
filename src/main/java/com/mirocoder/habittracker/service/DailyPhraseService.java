@@ -5,7 +5,6 @@ import com.mirocoder.habittracker.exception.DuplicateDailyPhraseException;
 import com.mirocoder.habittracker.model.DailyPhrase;
 import com.mirocoder.habittracker.repository.DailyPhraseRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 

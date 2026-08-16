@@ -26,8 +26,7 @@ public class DailyPhraseRepository {
     }
 
     public DailyPhrase findPhraseForToday() {
-//        List<DailyPhrase> phrases = findAll();
-        List<DailyPhrase> phrases= findActivePhrases();
+        List<DailyPhrase> phrases = findActivePhrases();
 
         if (phrases.isEmpty()) {
             return null;
@@ -123,12 +122,6 @@ public class DailyPhraseRepository {
 
     public boolean updateActiveStatus(long id, boolean active){
         String sql = "UPDATE daily_phrases SET active = ? WHERE id = ?";
-        int rows = jdbcTemplate.update(sql, active,id);
-
-        if (rows > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return jdbcTemplate.update(sql, active, id) > 0;
     }
 }

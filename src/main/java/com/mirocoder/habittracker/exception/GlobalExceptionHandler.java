@@ -44,4 +44,18 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(ex.getMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidArguments(
+            IllegalArgumentException ex
+    ) {
+        ApiErrorResponse response = new ApiErrorResponse(
+                400,
+                ex.getMessage(),
+                Map.of(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.badRequest().body(response);
+    }
 }

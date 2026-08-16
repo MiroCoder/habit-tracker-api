@@ -66,27 +66,6 @@ class HabitServiceTest {
         verify(dailyStatsRepository).update(result);
     }
 
-//    @Test
-//    void findHabitFindsByNameIgnoringCase() {
-//        ArrayList<Habit> habits = new ArrayList<>();
-//        habits.add(new Habit(1L,"Code", false, Habit.Priority.High));
-//
-//        Habit result = HabitService.findHabit(habits, "code");
-//
-//        assertNotNull(result);
-//        assertEquals("Code", result.getName());
-//    }
-//
-//    @Test
-//    void findHabitReturnsNullWhenNotFound() {
-//        ArrayList<Habit> habits = new ArrayList<>();
-//        habits.add(new Habit(1L,"Code", false, Habit.Priority.High));
-//
-//        Habit result = HabitService.findHabit(habits, "Sleep");
-//
-//        assertNull(result);
-//    }
-
     @Test
     void dayTypeReturnsPerfectDayForHundredPercent() {
         String result = HabitService.dayType(3, 3);

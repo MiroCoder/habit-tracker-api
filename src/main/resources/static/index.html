@@ -13,7 +13,10 @@
             <h1>Habit Tracker</h1>
             <p class="subtitle">Spring Boot</p>
         </div>
-        <time id="systemTime">Loading time...</time>
+        <div class="header-actions">
+            <a href="/admin.html">Manage phrases</a>
+            <time id="systemTime">Loading time...</time>
+        </div>
     </header>
 
     <section class="card add-card">
@@ -42,7 +45,7 @@
                 <h2>Today</h2>
                 <h3>Future Self Bank</h3>
                 <h3>Daily Phrase</h3>
-                <div id ="dailyPhrase">Loading...</div>
+                <div id="dailyPhrase">Loading...</div>
 
                 <p id="dayStatus" class="status-text">Loading...</p>
 
@@ -92,9 +95,9 @@
         <div class="modal-content">
             <h2>Edit habit</h2>
 
-            <input id="editHabitName" type="text" placeholder="Habit name">
+            <input id="editHabitName" type="text" placeholder="Habit name" aria-label="Habit name">
 
-            <select id="editHabitPriority">
+            <select id="editHabitPriority" aria-label="Habit priority">
                 <option value="High">High</option>
                 <option value="Medium">Medium</option>
                 <option value="Low">Low</option>
