@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: habit_tracker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d habit_tracker"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - habit_tracker_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "8081:8081"
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/habit_tracker
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  habit_tracker_data:
